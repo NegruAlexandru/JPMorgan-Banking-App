@@ -8,23 +8,8 @@ import lombok.NoArgsConstructor;
 import org.poo.app.app_functionality.debug.PrintUsers;
 import org.poo.app.app_functionality.debug.PrintTransactions;
 
-import org.poo.app.app_functionality.user_operations.AddAccount;
-import org.poo.app.app_functionality.user_operations.AddFunds;
-import org.poo.app.app_functionality.user_operations.CreateCard;
-import org.poo.app.app_functionality.user_operations.CreateOneTimeCard;
-import org.poo.app.app_functionality.user_operations.DeleteCard;
-import org.poo.app.app_functionality.user_operations.SetMinimumBalance;
-import org.poo.app.app_functionality.user_operations.SendMoney;
-import org.poo.app.app_functionality.user_operations.SetAlias;
-import org.poo.app.app_functionality.user_operations.SplitPayment;
+import org.poo.app.app_functionality.user_operations.*;
 
-import org.poo.app.app_functionality.user_operations.CheckCardStatus;
-import org.poo.app.app_functionality.user_operations.DeleteAccount;
-import org.poo.app.app_functionality.user_operations.PayOnline;
-import org.poo.app.app_functionality.user_operations.Report;
-import org.poo.app.app_functionality.user_operations.SpendingsReport;
-import org.poo.app.app_functionality.user_operations.AddInterest;
-import org.poo.app.app_functionality.user_operations.ChangeInterestRate;
 import org.poo.fileio.CommandInput;
 
 import java.util.List;
@@ -51,6 +36,9 @@ public class CommandHandler {
     private double interestRate;
     private List<String> accounts;
     private String errorMessage;
+    private String classicAccountIBAN;
+    private String savingsAccountIBAN;
+    private String newPlanType;
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static final AccountHandler ACCOUNT_HANDLER = new AccountHandler();
     private List<String> debugCommands = List.of("printUsers", "printTransactions");
@@ -58,7 +46,8 @@ public class CommandHandler {
             "report", "addInterest", "changeInterestRate", "spendingsReport");
     private List<String> commands = List.of("addAccount", "addFunds", "createCard",
             "createOneTimeCard", "deleteCard", "setMinimumBalance",
-            "sendMoney", "setAlias", "splitPayment");
+            "sendMoney", "setAlias", "splitPayment", "withdrawSavings", "cashWithdrawal",
+            "upgradePlan");
 
     public CommandHandler(final CommandInput command) {
         this.command = command.getCommand();
@@ -151,7 +140,10 @@ public class CommandHandler {
             case "setMinimumBalance" -> SetMinimumBalance.execute(this);
             case "sendMoney" -> SendMoney.execute(this);
             case "setAlias" -> SetAlias.execute(this);
-             case "splitPayment" -> SplitPayment.execute(this);
+            case "splitPayment" -> SplitPayment.execute(this);
+            case "withdrawSavings" -> WithdrawSavings.execute(this);
+            case "cashWithdrawal" -> CashWithdrawal.execute(this);
+            case "upgradePlan" -> UpgradePlan.execute(this);
             default -> { }
         }
     }

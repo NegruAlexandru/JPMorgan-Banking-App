@@ -27,6 +27,8 @@ public final class Transaction {
     private Double amountDouble;
     private String currency;
     private String errorMessage;
+    private String classicAccountIBAN;
+    private String savingsAccountIBAN;
 
     private Transaction(final Builder builder) {
         this.timestamp = builder.timestamp;
@@ -43,6 +45,8 @@ public final class Transaction {
         this.amountDouble = builder.amountDouble;
         this.currency = builder.currency;
         this.errorMessage = builder.errorMessage;
+        this.classicAccountIBAN = builder.classicAccountIBAN;
+        this.savingsAccountIBAN = builder.savingsAccountIBAN;
     }
 
     public static final class Builder {
@@ -60,6 +64,8 @@ public final class Transaction {
         private Double amountDouble = (double) 0;
         private String currency;
         private String errorMessage;
+        private String classicAccountIBAN;
+        private String savingsAccountIBAN;
 
         public Builder(final int timestamp, final String description) {
             this.timestamp = timestamp;
@@ -199,6 +205,28 @@ public final class Transaction {
         }
 
         /**
+         * Sets the classicAccountIBAN of the transaction
+         *
+         * @param classicAccountIBAN the classicAccountIBAN of the transaction
+         * @return this Builder instance
+         */
+        public Builder classicAccountIBAN(final String classicAccountIBAN) {
+            this.classicAccountIBAN = classicAccountIBAN;
+            return this;
+        }
+
+        /**
+         * Sets the savingsAccountIBAN of the transaction
+         *
+         * @param savingsAccountIBAN the savingsAccountIBAN of the transaction
+         * @return this Builder instance
+         */
+        public Builder savingsAccountIBAN(final String savingsAccountIBAN) {
+            this.savingsAccountIBAN = savingsAccountIBAN;
+            return this;
+        }
+
+        /**
          * Builds the Transaction object
          *
          * @return the Transaction object
@@ -282,6 +310,14 @@ public final class Transaction {
 
         if (transaction.getTransferType() != null) {
             transactionNode.put("transferType", transaction.getTransferType());
+        }
+
+        if (transaction.getClassicAccountIBAN() != null) {
+            transactionNode.put("classicAccountIBAN", transaction.getClassicAccountIBAN());
+        }
+
+        if (transaction.getSavingsAccountIBAN() != null) {
+            transactionNode.put("savingsAccountIBAN", transaction.getSavingsAccountIBAN());
         }
 
         return transactionNode;

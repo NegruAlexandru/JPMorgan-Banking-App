@@ -4,18 +4,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.poo.fileio.CommerciantInput;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 public class Commerciant {
+    private String commerciant;
     private int id;
-    private String description;
-    private List<String> commerciants;
+    private String account;
+    private String type;
+    private String cashbackStrategy;
 
     public Commerciant(final CommerciantInput commerciantInput) {
+        this.commerciant = commerciantInput.getCommerciant();
         this.id = commerciantInput.getId();
-        this.description = commerciantInput.getDescription();
-        this.commerciants = commerciantInput.getCommerciants();
+        this.account = commerciantInput.getAccount();
+        this.type = commerciantInput.getType();
+        this.cashbackStrategy = commerciantInput.getCashbackStrategy();
     }
 }

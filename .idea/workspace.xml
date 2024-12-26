@@ -4,33 +4,52 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4204c72-f8a4-4c9c-bff4-f07df1652e47" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/AccountInterface.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/AccountVisitor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/CardInterface.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/CardVisitor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/Utils.java" afterDir="false" />
+    <list default="true" id="c4204c72-f8a4-4c9c-bff4-f07df1652e47" name="Changes" comment="init">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CashWithdrawal.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/UpgradePlan.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/WithdrawSavings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/debug/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/debug/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/input/Commerciant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/input/Commerciant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/input/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/input/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/TransactionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/TransactionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/Account.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "NegruAlexandru"
+  }
 }]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/NegruAlexandru/Etapa2",
+    "accountId": "2d6f2770-3183-494b-bfb4-6190fccf338a"
+  }
+}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2ql4tCwWG4aIt5vfo78U09LKwiF" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="false" />
@@ -38,6 +57,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
@@ -50,6 +70,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/alexi/Documents/Facultate materiale/POO/Teme/Etapa2/src/main/java/org/example/Main.java",
+    "settings.editor.selected.configurable": "editor.preferences.tabs",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -76,11 +97,36 @@
       <option name="presentableId" value="Default" />
       <updated>1735224041263</updated>
       <workItem from="1735224042366" duration="1808000" />
+      <workItem from="1735225863848" duration="14625000" />
     </task>
+    <task id="LOCAL-00001" summary="init">
+      <option name="closed" value="true" />
+      <created>1735225978860</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1735225978860</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init" />
+    <option name="LAST_COMMIT_MESSAGE" value="init" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

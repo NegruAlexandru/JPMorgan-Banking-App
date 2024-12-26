@@ -74,7 +74,7 @@ public class Account implements AccountInterface {
      * Delete all cards from the account
      */
     public void deleteAllCards() {
-        for (Card c : cards) {
+        for (Card c : new ArrayList<>(cards)) {
             cards.remove(c);
             DB.removeAccountWithCardNumber(c.getCardNumber());
         }

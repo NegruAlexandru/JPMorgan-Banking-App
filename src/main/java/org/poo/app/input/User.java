@@ -17,14 +17,24 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String birthDate;
+    private String occupation;
+    private String plan;
     private ArrayList<Account> accounts;
     private ArrayList<Transaction> transactions;
     private HashMap<String, String> aliases;
 
-    public User(final String firstName, final String lastName, final String email) {
+    public User(final String firstName, final String lastName, final String email, final String birthDate, final String occupation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.birthDate = birthDate;
+        this.occupation = occupation;
+        if (occupation.equals("student")) {
+            this.plan = "student";
+        } else {
+            this.plan = "classic";
+        }
         this.accounts = new ArrayList<>();
         this.transactions = new ArrayList<>();
         this.aliases = new HashMap<>();
@@ -34,6 +44,8 @@ public class User {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
+        this.birthDate = user.getBirthDate();
+        this.occupation = user.getOccupation();
         this.accounts = new ArrayList<>();
         this.transactions = new ArrayList<>();
         this.aliases = new HashMap<>();

@@ -101,4 +101,19 @@ public abstract class TransactionHandler {
                 .build();
         transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
     }
+
+    /**
+     * Add a transaction for withdrawing money
+     * @param commandHandler current CommandHandler object
+     */
+    public static void addTransactionWithdrawMoney(final CommandHandler commandHandler) {
+        Transaction transaction = new Transaction.Builder(commandHandler.getTimestamp(),
+                commandHandler.getDescription())
+                .amountDouble(commandHandler.getAmount())
+                .classicAccountIBAN(commandHandler.getClassicAccountIBAN())
+                .savingsAccountIBAN(commandHandler.getSavingsAccountIBAN())
+                .build();
+        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getSavingsAccountIBAN()));
+        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getClassicAccountIBAN()));
+    }
 }
