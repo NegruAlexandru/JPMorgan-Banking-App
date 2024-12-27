@@ -5,22 +5,26 @@ import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.input.User;
 import org.poo.app.user_facilities.Account;
+import org.poo.utils.Operation;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
 import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
 
-public abstract class PrintTransactions {
+public class PrintTransactions extends Operation {
+    public PrintTransactions(final CommandHandler handler, final ArrayNode output) {
+        super(handler, output);
+    }
+
     /**
      * Get all transactions for a user
-     * @param handler current CommandHandler object
-     * @return output of the command
+
      */
-    public static ArrayNode execute(final CommandHandler handler) {
+    public void execute() {
         User user = DB.findUserByEmail(handler.getEmail());
 
-        ArrayNode output = OBJECT_MAPPER.createArrayNode();
+        ArrayNode node = OBJECT_MAPPER.createArrayNode();
         ArrayList<Transaction> transactions = new ArrayList<>();
 
         for (Account account : user.getAccounts()) {
@@ -30,9 +34,9 @@ public abstract class PrintTransactions {
         transactions.sort(Comparator.comparingDouble(Transaction::getTimestamp));
 
         for (Transaction t : transactions) {
-            output.add(Transaction.formatOutput(t));
+            node.add(Transaction.formatOutput(t));
         }
 
-        return output;
+        output.add(node);
     }
 }

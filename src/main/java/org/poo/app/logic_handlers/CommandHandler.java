@@ -40,14 +40,7 @@ public class CommandHandler {
     private String savingsAccountIBAN;
     private String newPlanType;
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    public static final AccountHandler ACCOUNT_HANDLER = new AccountHandler();
-    private List<String> debugCommands = List.of("printUsers", "printTransactions");
-    private List<String> outputCommands = List.of("deleteAccount", "payOnline", "checkCardStatus",
-            "report", "addInterest", "changeInterestRate", "spendingsReport");
-    private List<String> commands = List.of("addAccount", "addFunds", "createCard",
-            "createOneTimeCard", "deleteCard", "setMinimumBalance",
-            "sendMoney", "setAlias", "splitPayment", "withdrawSavings", "cashWithdrawal",
-            "upgradePlan");
+
 
     public CommandHandler(final CommandInput command) {
         this.command = command.getCommand();
@@ -70,81 +63,12 @@ public class CommandHandler {
         this.accounts = command.getAccounts();
     }
 
-    /**
-     * Select the command to execute and create the response
-     * @param output ArrayNode to add the response to
-     */
-    public void executeCommandAndCreateResponse(final ArrayNode output) {
-        if (debugCommands.contains(command)) {
-            ArrayNode result = executeDebugCommands();
-            ObjectNode node = OBJECT_MAPPER.createObjectNode();
-            node.put("command", command);
-            node.set("output", result);
-            node.put("timestamp", getTimestamp());
-            output.add(node);
-        } else if (outputCommands.contains(command)) {
-            ObjectNode result = executeCommandsWithOutput();
-            if (result == null) {
-                return;
-            }
-            ObjectNode node = OBJECT_MAPPER.createObjectNode();
-            node.put("command", command);
-            node.set("output", result);
-            node.put("timestamp", getTimestamp());
-            output.add(node);
-        } else if (commands.contains(command)) {
-            executeCommandsWithoutOutput();
+        /**
+         * Select the command to execute and create the response
+         * @param output ArrayNode to add the response to
+         */
+        public void executeCommandAndCreateResponse(final ArrayNode output) {
+            OperationFactory.getOperation(this, output).execute();
         }
     }
 
-    /**
-     * Execute debug commands
-     * @return ArrayNode with the output of the command
-     */
-    public ArrayNode executeDebugCommands() {
-        return switch (command) {
-            case "printUsers" -> PrintUsers.execute();
-            case "printTransactions" ->
-                    PrintTransactions.execute(this);
-            default -> null;
-        };
-    }
-
-    /**
-     * Execute commands that return an output
-     * @return ObjectNode with the output of the command
-     */
-    public ObjectNode executeCommandsWithOutput() {
-        return switch (command) {
-            case "deleteAccount" -> DeleteAccount.execute(this);
-            case "payOnline" -> PayOnline.execute(this);
-            case "checkCardStatus" -> CheckCardStatus.execute(this);
-            case "report" -> Report.execute(this);
-            case "addInterest" -> AddInterest.execute(this);
-            case "changeInterestRate" -> ChangeInterestRate.execute(this);
-            case "spendingsReport" -> SpendingsReport.execute(this);
-            default -> null;
-        };
-    }
-
-    /**
-     * Execute commands that do not return an output
-     */
-    public void executeCommandsWithoutOutput() {
-        switch (command) {
-            case "addAccount" -> AddAccount.execute(this);
-            case "addFunds" -> AddFunds.execute(this);
-            case "createCard" -> CreateCard.execute(this);
-            case "createOneTimeCard" -> CreateOneTimeCard.execute(this);
-            case "deleteCard" -> DeleteCard.execute(this);
-            case "setMinimumBalance" -> SetMinimumBalance.execute(this);
-            case "sendMoney" -> SendMoney.execute(this);
-            case "setAlias" -> SetAlias.execute(this);
-            case "splitPayment" -> SplitPayment.execute(this);
-            case "withdrawSavings" -> WithdrawSavings.execute(this);
-            case "cashWithdrawal" -> CashWithdrawal.execute(this);
-            case "upgradePlan" -> UpgradePlan.execute(this);
-            default -> { }
-        }
-    }
-}

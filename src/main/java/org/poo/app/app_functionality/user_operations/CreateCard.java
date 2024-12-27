@@ -1,16 +1,22 @@
 package org.poo.app.app_functionality.user_operations;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.user_facilities.Account;
+import org.poo.utils.Operation;
 
-public abstract class CreateCard {
+public class CreateCard extends Operation {
+    public CreateCard(final CommandHandler handler, final ArrayNode output) {
+        super(handler, output);
+    }
+
     /**
      * Creates a new card for the account
-     * @param handler current CommandHandler object
      */
-    public static void execute(final CommandHandler handler) {
+    @Override
+    public void execute() {
         Account account = DB.findAccountByIBAN(handler.getAccount());
 
         if (account == null) {
@@ -21,8 +27,12 @@ public abstract class CreateCard {
             return;
         }
 
-        handler.setCardNumber(account.createCard());
-        handler.setDescription("New card created");
+        addTransaction("New card created", account);
+    }
+
+    public void addTransaction(final String description, final Account account) {
+        handler.setCardNumber(account.createOneTimeCard());
+        handler.setDescription(description);
         TransactionHandler.addTransactionCard(handler);
     }
 }

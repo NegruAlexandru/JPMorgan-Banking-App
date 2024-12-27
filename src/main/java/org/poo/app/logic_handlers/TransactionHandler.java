@@ -113,7 +113,6 @@ public abstract class TransactionHandler {
                 .classicAccountIBAN(commandHandler.getClassicAccountIBAN())
                 .savingsAccountIBAN(commandHandler.getSavingsAccountIBAN())
                 .build();
-        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getSavingsAccountIBAN()));
-        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getClassicAccountIBAN()));
+        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
     }
 }

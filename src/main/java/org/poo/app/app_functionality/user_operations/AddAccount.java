@@ -1,17 +1,23 @@
 package org.poo.app.app_functionality.user_operations;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.input.User;
 import org.poo.app.user_facilities.Account;
+import org.poo.utils.Operation;
 
-public abstract class AddAccount {
+public class AddAccount extends Operation {
+    public AddAccount(CommandHandler handler, ArrayNode output) {
+        super(handler, output);
+    }
+
     /**
      * Adds a new account to the user
-     * @param handler current CommandHandler object
      */
-    public static void execute(final CommandHandler handler) {
+    @Override
+    public void execute() {
         User user = DB.findUserByEmail(handler.getEmail());
 
         Account newAccount;
@@ -21,8 +27,12 @@ public abstract class AddAccount {
             newAccount = user.addAccount(handler.getCurrency());
         }
 
-        handler.setAccount(newAccount.getIban());
-        handler.setDescription("New account created");
+        addTransaction("New account created", newAccount);
+    }
+
+    public void addTransaction(final String description, final Account account) {
+        handler.setAccount(account.getIban());
+        handler.setDescription(description);
         TransactionHandler.addTransactionDescriptionTimestamp(handler);
     }
 }

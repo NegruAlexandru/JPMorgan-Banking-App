@@ -1,17 +1,23 @@
 package org.poo.app.app_functionality.user_operations;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.input.ExchangeRate;
 import org.poo.app.input.User;
 import org.poo.app.logic_handlers.*;
 import org.poo.app.user_facilities.Account;
+import org.poo.utils.Operation;
 import java.time.Year;
 
-public abstract class WithdrawSavings {
+public class WithdrawSavings extends Operation {
+    public WithdrawSavings(final CommandHandler handler, final ArrayNode output) {
+        super(handler, output);
+    }
+
     /**
      * Withdraw money from a savings account
-     * @param handler current CommandHandler object
      */
-    public static void execute(final CommandHandler handler) {
+    @Override
+    public void execute() {
         Account account = DB.findAccountByIBAN(handler.getAccount());
 
         if (account == null) {
@@ -23,8 +29,7 @@ public abstract class WithdrawSavings {
 
         if (!account.getType().equals("savings")) {
             //Account is not of type savings.
-            handler.setDescription("Account is not of type savings");
-            TransactionHandler.addTransactionDescriptionTimestamp(handler);
+            addTransaction("Account is not of type savings");
             return;
         }
 
@@ -38,8 +43,7 @@ public abstract class WithdrawSavings {
 
         if (currentYear - year < 21) {
             //You don't have the minimum age required.
-            handler.setDescription("You don't have the minimum age required.");
-            TransactionHandler.addTransactionDescriptionTimestamp(handler);
+            addTransaction("You don't have the minimum age required.");
             return;
         }
 
@@ -55,8 +59,7 @@ public abstract class WithdrawSavings {
 
         if (!hasClassic) {
             //You do not have a classic account.
-            handler.setDescription("You do not have a classic account.");
-            TransactionHandler.addTransactionDescriptionTimestamp(handler);
+            addTransaction("You do not have a classic account.");
             return;
         }
 
@@ -64,16 +67,26 @@ public abstract class WithdrawSavings {
 
         if (account.getBalance() < handler.getAmount() * exchangeRate.getRate()) {
             //Insufficient funds
-            handler.setDescription("Insufficient funds");
-            TransactionHandler.addTransactionDescriptionTimestamp(handler);
+            addTransaction("Insufficient funds");
             return;
         }
 
         AccountHandler.transferFunds(account, account1, handler.getAmount());
-        handler.setDescription("Savings withdrawal");
-        handler.setAmount(handler.getAmount() * exchangeRate.getRate());
+        addTransaction("Savings withdrawal", account, account1);
+    }
+
+    public void addTransaction(final String description, final Account account,
+                               final Account account1) {
+        handler.setDescription(description);
         handler.setSavingsAccountIBAN(account.getIban());
         handler.setClassicAccountIBAN(account1.getIban());
+
+        handler.setAccount(account1.getIban());
+        TransactionHandler.addTransactionWithdrawMoney(handler);
+
+        ExchangeRate exchangeRate = DB.getExchangeRate(account.getCurrency(), handler.getCurrency());
+        handler.setAmount(handler.getAmount() * exchangeRate.getRate());
+        handler.setAccount(account.getIban());
         TransactionHandler.addTransactionWithdrawMoney(handler);
     }
 }

@@ -1,17 +1,23 @@
 package org.poo.app.app_functionality.user_operations;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.logic_handlers.AccountHandler;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.user_facilities.Account;
+import org.poo.utils.Operation;
 
-public abstract class SendMoney {
+public class SendMoney extends Operation {
+    public SendMoney(final CommandHandler handler, final ArrayNode output) {
+        super(handler, output);
+    }
+
     /**
      * Send money from one account to another
-     * @param handler current CommandHandler object
      */
-    public static void execute(final CommandHandler handler) {
+    @Override
+    public void execute() {
         Account senderAccount = DB.findAccountByIBAN(handler.getAccount());
         Account receiverAccount;
         if (handler.getAlias() != null) {

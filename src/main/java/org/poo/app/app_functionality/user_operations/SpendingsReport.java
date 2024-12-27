@@ -6,39 +6,33 @@ import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.app_functionality.debug.Transaction;
 import org.poo.app.user_facilities.Account;
+import org.poo.utils.Operation;
 
 import java.util.TreeMap;
 
 import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
 import static org.poo.app.app_functionality.debug.Transaction.formatOutput;
 
-public abstract class SpendingsReport {
+public class SpendingsReport extends Operation {
+    public SpendingsReport(final CommandHandler handler, final ArrayNode output) {
+        super(handler, output);
+    }
+
     /**
      * Create a spending report for an account
-     * @param handler current CommandHandler object
-     * @return the report ObjectNode if the operation was successful
-     *       or error ObjectNode if the account is not found
      */
-    public static ObjectNode execute(final CommandHandler handler) {
+    public void execute() {
         ObjectNode output = OBJECT_MAPPER.createObjectNode();
 
         Account account = DB.findAccountByIBAN(handler.getAccount());
         if (account == null) {
-            output.put("description", "Account not found");
-            output.put("timestamp", handler.getTimestamp());
-            return output;
+            addMessageToOutput("description", "Account not found");
         }
 
         if (account.getType().equals("savings")) {
-            ObjectNode error = OBJECT_MAPPER.createObjectNode();
-            error.put("error",
+            addMessageToOutput("error",
                 "This kind of report is not supported for a saving account");
-            return error;
         }
-
-        output.put("balance", account.getBalance());
-        output.put("currency", account.getCurrency());
-        output.put("IBAN", account.getIban());
 
         ArrayNode commerciantTransactions = OBJECT_MAPPER.createArrayNode();
         TreeMap<String, Double> spending = new TreeMap<>();
@@ -54,10 +48,7 @@ public abstract class SpendingsReport {
             commerciants.add(commerciant);
         }
 
-        output.set("commerciants", commerciants);
-        output.set("transactions", commerciantTransactions);
-
-        return output;
+        addMessageToOutput(account, commerciants, commerciantTransactions);
     }
 
     /**
@@ -67,7 +58,7 @@ public abstract class SpendingsReport {
      * @param transactionsWithCommerciant ArrayNode to store the transactions
      * @param spending TreeMap to store the total spending
      */
-    public static void calculateCommerciantTransactionsAndSpending(
+    public void calculateCommerciantTransactionsAndSpending(
             final Account account,
             final CommandHandler handler,
             final ArrayNode transactionsWithCommerciant,
@@ -87,5 +78,22 @@ public abstract class SpendingsReport {
                 }
             }
         }
+    }
+
+    public void addMessageToOutput(final Account account, final ArrayNode commerciants,
+                                   final ArrayNode commerciantTransactions) {
+        ObjectNode node = OBJECT_MAPPER.createObjectNode();
+        node.put("command", handler.getCommand());
+        node.put("timestamp", handler.getTimestamp());
+
+        ObjectNode outputNode = OBJECT_MAPPER.createObjectNode();
+        outputNode.put("balance", account.getBalance());
+        outputNode.put("currency", account.getCurrency());
+        outputNode.put("IBAN", account.getIban());
+        outputNode.set("commerciants", commerciants);
+        outputNode.set("transactions", commerciantTransactions);
+
+        node.set("output", outputNode);
+        output.add(node);
     }
 }

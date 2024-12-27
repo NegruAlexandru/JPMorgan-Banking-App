@@ -16,24 +16,23 @@ public abstract class PaymentHandler {
                            final Card card, final CommandHandler commandHandler) {
         double amount = commandHandler.getAmount();
         double balance = ownerAccount.getBalance();
+        commandHandler.setAccount(ownerAccount.getIban());
 
         if (balance - amount < 0) {
             commandHandler.setDescription("Insufficient funds");
-            commandHandler.setAccount(ownerAccount.getIban());
             TransactionHandler.addTransactionDescriptionTimestamp(commandHandler);
         } else if (balance - ownerAccount.getMinBalance() - amount <= 0) {
             commandHandler.setDescription("The card is frozen");
             card.setCardStatus("frozen");
-            commandHandler.setAccount(ownerAccount.getIban());
             TransactionHandler.addTransactionDescriptionTimestamp(commandHandler);
         } else {
             ownerAccount.setBalance(balance - amount);
             commandHandler.setDescription("Card payment");
             TransactionHandler.addTransactionPayOnline(commandHandler);
             if (card.getType().equals("one-time")) {
-                commandHandler.setAccount(ownerAccount.getIban());
-                DeleteCard.execute(commandHandler);
-                CreateOneTimeCard.execute(commandHandler);
+
+                new DeleteCard(commandHandler, null).execute();
+                new CreateOneTimeCard(commandHandler, null).execute();
             }
 
         }

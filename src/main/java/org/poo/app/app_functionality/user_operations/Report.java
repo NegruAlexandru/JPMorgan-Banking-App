@@ -6,30 +6,26 @@ import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.app_functionality.debug.Transaction;
 import org.poo.app.user_facilities.Account;
+import org.poo.utils.Operation;
 
 import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
 import static org.poo.app.app_functionality.debug.Transaction.formatOutput;
 
-public abstract class Report {
+public class Report extends Operation {
+    public Report(final CommandHandler handler, final ArrayNode output) {
+        super(handler, output);
+    }
+
     /**
      * Create a report of all transactions for an account
-     * @param handler current CommandHandler object
-     * @return the report ObjectNode if the operation was successful
-     *       or error ObjectNode if the account is not found
      */
-    public static ObjectNode execute(final CommandHandler handler) {
-        ObjectNode output = OBJECT_MAPPER.createObjectNode();
-
+    @Override
+    public void execute() {
         Account account = DB.findAccountByIBAN(handler.getAccount());
-        if (account == null) {
-            output.put("description", "Account not found");
-            output.put("timestamp", handler.getTimestamp());
-            return output;
-        }
 
-        output.put("balance", account.getBalance());
-        output.put("currency", account.getCurrency());
-        output.put("IBAN", account.getIban());
+        if (account == null) {
+            super.addMessageToOutput("description", "Account not found");
+        }
 
         ArrayNode transactions = OBJECT_MAPPER.createArrayNode();
         for (Transaction t : account.getTransactions()) {
@@ -38,8 +34,21 @@ public abstract class Report {
                 transactions.add(formatOutput(t));
             }
         }
-        output.set("transactions", transactions);
+        this.addMessageToOutput(transactions, account);
+    }
 
-        return output;
+    public void addMessageToOutput(final ArrayNode transactions, final Account account) {
+        ObjectNode node = OBJECT_MAPPER.createObjectNode();
+        node.put("command", handler.getCommand());
+        node.put("timestamp", handler.getTimestamp());
+
+        ObjectNode outputNode = OBJECT_MAPPER.createObjectNode();
+        outputNode.put("balance", account.getBalance());
+        outputNode.put("currency", account.getCurrency());
+        outputNode.put("IBAN", account.getIban());
+        outputNode.set("transactions", transactions);
+
+        node.set("output", outputNode);
+        output.add(node);
     }
 }

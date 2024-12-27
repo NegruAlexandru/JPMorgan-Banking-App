@@ -1,37 +1,32 @@
 package org.poo.app.app_functionality.user_operations;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.logic_handlers.AccountHandler;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.SavingsAccount;
+import org.poo.utils.Operation;
 
-import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
-
-public abstract class AddInterest {
+public class AddInterest extends Operation {
+    public AddInterest(CommandHandler handler, ArrayNode output) {
+        super(handler, output);
+    }
     /**
      * Add interest to a savings account
-     * @param handler current CommandHandler object
-     * @return error ObjectNode if the account is not a savings account
-     *        or null if the operation was successful
+     *
      */
-    public static ObjectNode execute(final CommandHandler handler) {
+    public void execute() {
         Account account = DB.findAccountByIBAN(handler.getAccount());
         if (account == null) {
-            return null;
+            return;
         }
 
         if (!account.getType().equals("savings")) {
-            ObjectNode error = OBJECT_MAPPER.createObjectNode();
-            error.put("description", "This is not a savings account");
-            error.put("timestamp", handler.getTimestamp());
-            return error;
+            addMessageToOutput("description", "This is not a savings account");
         }
 
         AccountHandler.addFunds(account, account.getBalance()
                 * ((SavingsAccount) account).getInterestRate());
-
-        return null;
     }
 }

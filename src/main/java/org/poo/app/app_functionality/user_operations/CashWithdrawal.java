@@ -1,24 +1,38 @@
 package org.poo.app.app_functionality.user_operations;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.poo.app.logic_handlers.AccountHandler;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.input.User;
 import org.poo.app.user_facilities.Account;
+import org.poo.utils.Operation;
 
-public abstract class CashWithdrawal {
+import java.lang.reflect.Array;
+
+public class CashWithdrawal extends Operation {
+    public CashWithdrawal(CommandHandler handler, ArrayNode output) {
+        super(handler, output);
+    }
+
     /**
      * Withdraw money from an account
-     * @param handler current CommandHandler object
      */
-    public static void execute(final CommandHandler handler) {
+    @Override
+    public void execute() {
         Account account = DB.findAccountByCardNumber(handler.getCardNumber());
 
         // ???
+//        if (account == null) {
+//            //Account not found
+//            addTransaction("Account not found");
+//            return;
+//        }
+
         if (account == null) {
             //Account not found
-            handler.setDescription("Account not found");
-            TransactionHandler.addTransactionDescriptionTimestamp(handler);
+
             return;
         }
 
@@ -27,20 +41,17 @@ public abstract class CashWithdrawal {
         User user = DB.findUserByEmail(handler.getEmail());
         if (user == null) {
             //User not found
-            handler.setDescription("User not found");
-            TransactionHandler.addTransactionDescriptionTimestamp(handler);
+            addTransaction("User not found");
             return;
         }
 
         if (account.getBalance() < handler.getAmount()) {
             //Insufficient funds
-            handler.setDescription("Insufficient funds");
-            TransactionHandler.addTransactionDescriptionTimestamp(handler);
+            addTransaction("Insufficient funds");
             return;
         }
 
-        account.setBalance(account.getBalance() - handler.getAmount());
-        handler.setDescription("Cash withdrawal of " + handler.getAmount());
-        TransactionHandler.addTransactionDescriptionTimestamp(handler);
+        AccountHandler.removeFunds(account, handler.getAmount());
+        addTransaction("Cash withdrawal of " + handler.getAmount());
     }
 }
