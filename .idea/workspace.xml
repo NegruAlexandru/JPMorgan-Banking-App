@@ -4,36 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4204c72-f8a4-4c9c-bff4-f07df1652e47" name="Changes" comment="introduced factory and template dp">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddAccountCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandExecutor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/Command.java" afterDir="false" />
+    <list default="true" id="c4204c72-f8a4-4c9c-bff4-f07df1652e47" name="Changes" comment="debugged for first version functionality">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddFundsCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddInterestCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/CashWithdrawalCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/ChangeInterestRateCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/CheckCardStatusCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/CreateCardCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/CreateOneTimeCardCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/DeleteAccountCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/DeleteCardCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/PayOnlineCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/PrintTransactionsCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/PrintUsersCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/ReportCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SendMoneyCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SetAliasCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SetMinimumBalanceCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SpendingsReportCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SplitPaymentCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/UpgradePlanCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/WithdrawSavingsCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ref/ref_test01_user_updates.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test01_user_updates.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ref/ref_test03_commisions.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test03_commisions.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/debug/PrintTransactions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/debug/PrintTransactions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/debug/PrintUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/debug/PrintUsers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddInterest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddInterest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CashWithdrawal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CashWithdrawal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/ChangeInterestRate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/ChangeInterestRate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CheckCardStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CheckCardStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CreateCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CreateCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CreateOneTimeCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CreateOneTimeCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/DeleteAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/DeleteAccount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/PayOnline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/PayOnline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/Report.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SpendingsReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SpendingsReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SplitPayment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SplitPayment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/UpgradePlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/UpgradePlan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/WithdrawSavings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/WithdrawSavings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/input/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/input/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/AccountHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/AccountHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddAccountCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddAccountCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/OperationFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/OperationFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/checker/Checker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/checker/Checker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/checker/CheckerConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/checker/CheckerConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/utils/Operation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/Operation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/OperationFactory.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +61,7 @@
   }
 }</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -98,12 +96,16 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.poo.app.app_functionality.commands" />
+      <recent name="org.poo.app.logic_handlers" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\alexi\Documents\Facultate materiale\POO\Teme\Etapa2\src\main\java\org\poo\utils" />
       <recent name="C:\Users\alexi\Documents\Facultate materiale\POO\Teme\Etapa2" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.poo.main.Main" />
       <module name="Etapa2" />
@@ -132,8 +134,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Test" />
       </list>
     </recent_temporary>
   </component>
@@ -161,7 +163,7 @@
       <workItem from="1735327900391" duration="11000" />
       <workItem from="1735327922036" duration="903000" />
       <workItem from="1735328893475" duration="6425000" />
-      <workItem from="1735485941395" duration="12655000" />
+      <workItem from="1735485941395" duration="16412000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <option name="closed" value="true" />
@@ -187,7 +189,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735336565894</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="debugged for first version functionality">
+      <option name="closed" value="true" />
+      <created>1735502484732</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1735502484732</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,7 +218,8 @@
     <MESSAGE value="init" />
     <MESSAGE value="implemented WithdrawSavings, CashWithdrawal, UpgradePlan" />
     <MESSAGE value="introduced factory and template dp" />
-    <option name="LAST_COMMIT_MESSAGE" value="introduced factory and template dp" />
+    <MESSAGE value="debugged for first version functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="debugged for first version functionality" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -2,15 +2,11 @@ package org.poo.app.logic_handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.poo.app.app_functionality.debug.PrintUsers;
-import org.poo.app.app_functionality.debug.PrintTransactions;
-
-import org.poo.app.app_functionality.user_operations.*;
 
 import org.poo.fileio.CommandInput;
+import org.poo.utils.Command;
 import org.poo.utils.Operation;
 
 import java.util.List;
@@ -69,13 +65,15 @@ public class CommandHandler {
          * @param output ArrayNode to add the response to
          */
         public void executeCommandAndCreateResponse(final ArrayNode output) {
-//            OperationFactory.getOperation(this, output).execute();
             //correct way
+//            CommandFactory.getCommand(this, output).execute();
+
+
 
             //debug way
-            Operation operation = OperationFactory.getOperation(this, output);
-            if (operation != null)
-                operation.execute();
+            Command command = CommandFactory.getCommand(this, output);
+            if (command != null)
+                command.execute();
         }
     }
 
