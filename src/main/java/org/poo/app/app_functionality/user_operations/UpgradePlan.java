@@ -2,10 +2,8 @@ package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.input.ExchangeRate;
-import org.poo.app.logic_handlers.AccountHandler;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
-import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.input.User;
 import org.poo.app.user_facilities.Account;
 import org.poo.utils.Operation;
@@ -23,9 +21,13 @@ public class UpgradePlan extends Operation {
         Account account = DB.findAccountByCardNumber(handler.getCardNumber());
 
         // ???
+//        if (account == null) {
+//            //Account not found
+//            addTransaction("Account not found");
+//            return;
+//        }
+
         if (account == null) {
-            //Account not found
-            addTransaction("Account not found");
             return;
         }
 
@@ -42,13 +44,13 @@ public class UpgradePlan extends Operation {
 
         if (user.getPlan().equals(handler.getNewPlanType())) {
             //The user already has the ${newPlanType} plan.
-            addTransaction("The user already has the " + handler.getNewPlanType() + " plan.");
+            addTransactionToDB("The user already has the " + handler.getNewPlanType() + " plan.");
             return;
         }
 
         if (sumToPay == 0) {
             //You cannot downgrade your plan.
-            addTransaction("You cannot downgrade your plan.");
+            addTransactionToDB("You cannot downgrade your plan.");
             return;
         }
 
@@ -56,13 +58,13 @@ public class UpgradePlan extends Operation {
 
         if (account.getBalance() < sumToPay * exchangeRate.getRate()) {
             //Insufficient funds
-            addTransaction("Insufficient funds");
+            addTransactionToDB("Insufficient funds");
             return;
         }
 
         account.setBalance(account.getBalance() - sumToPay * exchangeRate.getRate());
         user.setPlan(handler.getNewPlanType());
-        addTransaction("Upgrade plan");
+        addTransactionToDB("Upgrade plan");
     }
 
     private int calculateSumToPay(final User user, final CommandHandler handler) {

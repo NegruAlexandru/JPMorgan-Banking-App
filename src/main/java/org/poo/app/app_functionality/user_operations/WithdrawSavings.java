@@ -29,7 +29,7 @@ public class WithdrawSavings extends Operation {
 
         if (!account.getType().equals("savings")) {
             //Account is not of type savings.
-            addTransaction("Account is not of type savings");
+            addTransactionToDB("Account is not of type savings");
             return;
         }
 
@@ -43,7 +43,7 @@ public class WithdrawSavings extends Operation {
 
         if (currentYear - year < 21) {
             //You don't have the minimum age required.
-            addTransaction("You don't have the minimum age required.");
+            addTransactionToDB("You don't have the minimum age required.");
             return;
         }
 
@@ -59,7 +59,7 @@ public class WithdrawSavings extends Operation {
 
         if (!hasClassic) {
             //You do not have a classic account.
-            addTransaction("You do not have a classic account.");
+            addTransactionToDB("You do not have a classic account.");
             return;
         }
 
@@ -67,7 +67,7 @@ public class WithdrawSavings extends Operation {
 
         if (account.getBalance() < handler.getAmount() * exchangeRate.getRate()) {
             //Insufficient funds
-            addTransaction("Insufficient funds");
+            addTransactionToDB("Insufficient funds");
             return;
         }
 

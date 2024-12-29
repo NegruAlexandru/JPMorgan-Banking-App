@@ -24,7 +24,8 @@ public class Report extends Operation {
         Account account = DB.findAccountByIBAN(handler.getAccount());
 
         if (account == null) {
-            super.addMessageToOutput("description", "Account not found");
+            addTransactionToOutput("description", "Account not found");
+            return;
         }
 
         ArrayNode transactions = OBJECT_MAPPER.createArrayNode();

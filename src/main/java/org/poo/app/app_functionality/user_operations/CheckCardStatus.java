@@ -1,15 +1,11 @@
 package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
-import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.Card;
 import org.poo.utils.Operation;
-
-import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
 
 public class CheckCardStatus extends Operation {
     public CheckCardStatus(final CommandHandler handler, final ArrayNode output) {
@@ -23,7 +19,7 @@ public class CheckCardStatus extends Operation {
     public void execute() {
         Card card = DB.getCardByCardNumber(handler.getCardNumber());
         if (card == null) {
-            addMessageToOutput("description", "Card not found");
+            addTransactionToOutput("description", "Card not found");
             return;
         }
 
@@ -32,18 +28,12 @@ public class CheckCardStatus extends Operation {
         if (account == null) {
             return;
         }
+        handler.setAccount(account.getIban());
 
         if (card.getCardStatus().equals("active")
                 && account.getBalance() <= account.getMinBalance()) {
             card.setCardStatus("frozen");
-            addTransaction("You have reached the minimum amount of funds, the card will be frozen",
-                    account);
+            addTransactionToDB("You have reached the minimum amount of funds, the card will be frozen");
         }
-    }
-
-    public void addTransaction(final String description, final Account account) {
-        handler.setDescription(description);
-        handler.setAccount(account.getIban());
-        TransactionHandler.addTransactionCard(handler);
     }
 }

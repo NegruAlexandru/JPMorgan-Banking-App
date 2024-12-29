@@ -1,6 +1,7 @@
 package org.poo.app.app_functionality.debug;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.input.User;
@@ -24,7 +25,8 @@ public class PrintTransactions extends Operation {
     public void execute() {
         User user = DB.findUserByEmail(handler.getEmail());
 
-        ArrayNode node = OBJECT_MAPPER.createArrayNode();
+        ObjectNode node = OBJECT_MAPPER.createObjectNode();
+        ArrayNode outputNode = OBJECT_MAPPER.createArrayNode();
         ArrayList<Transaction> transactions = new ArrayList<>();
 
         for (Account account : user.getAccounts()) {
@@ -34,9 +36,16 @@ public class PrintTransactions extends Operation {
         transactions.sort(Comparator.comparingDouble(Transaction::getTimestamp));
 
         for (Transaction t : transactions) {
-            node.add(Transaction.formatOutput(t));
+            outputNode.add(Transaction.formatOutput(t));
         }
 
+        addOutputNodeToOutput(node, outputNode);
+    }
+
+    private void addOutputNodeToOutput(final ObjectNode node, final ArrayNode outputNode) {
+        node.put("command", handler.getCommand());
+        node.set("output", outputNode);
+        node.put("timestamp", handler.getTimestamp());
         output.add(node);
     }
 }

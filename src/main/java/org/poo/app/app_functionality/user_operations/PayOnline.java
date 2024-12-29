@@ -24,7 +24,8 @@ public class PayOnline extends Operation {
         Card card = DB.getCardByCardNumber(handler.getCardNumber());
 
         if (card == null) {
-            addMessageToOutput("description", "Card not found");
+            addTransactionToOutput("description", "Card not found");
+            return;
         }
 
         Account ownerAccount = DB.findAccountByCardNumber(handler.getCardNumber());

@@ -81,11 +81,12 @@ public class SplitPayment extends Operation {
         Account accountWithoutFunds = searchForAccountWithoutFundsForSplit(handler);
         if (accountWithoutFunds != null) {
             double amountToPay = handler.getAmount() / handler.getAccounts().size();
+            double fullAmount = handler.getAmount();
 
             for (String acc : handler.getAccounts()) {
                 Account accForSplit = DB.findAccountByIBAN(acc);
                 addTransaction("Split payment of "
-                        + String.format("%.2f", handler.getAmount()) + " " + handler.getCurrency(),
+                        + String.format("%.2f", fullAmount) + " " + handler.getCurrency(),
                         "Account " + accountWithoutFunds.getIban()
                                 + " has insufficient funds for a split payment.",
                         accForSplit, amountToPay);
@@ -104,6 +105,6 @@ public class SplitPayment extends Operation {
         handler.setAccount(account.getIban());
         handler.setAmount(amount);
         handler.setErrorMessage(errorMessage);
-        TransactionHandler.addTransactionSplitPayment(handler);
+        TransactionHandler.addTransactionErrorSplitPayment(handler);
     }
 }

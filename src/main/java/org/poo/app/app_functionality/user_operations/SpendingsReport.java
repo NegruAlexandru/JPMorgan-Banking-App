@@ -26,12 +26,14 @@ public class SpendingsReport extends Operation {
 
         Account account = DB.findAccountByIBAN(handler.getAccount());
         if (account == null) {
-            addMessageToOutput("description", "Account not found");
+            addTransactionToOutput("description", "Account not found");
+            return;
         }
 
         if (account.getType().equals("savings")) {
-            addMessageToOutput("error",
+            addOutputMessageToOutput("error",
                 "This kind of report is not supported for a saving account");
+            return;
         }
 
         ArrayNode commerciantTransactions = OBJECT_MAPPER.createArrayNode();
@@ -80,7 +82,7 @@ public class SpendingsReport extends Operation {
         }
     }
 
-    public void addMessageToOutput(final Account account, final ArrayNode commerciants,
+    private void addMessageToOutput(final Account account, final ArrayNode commerciants,
                                    final ArrayNode commerciantTransactions) {
         ObjectNode node = OBJECT_MAPPER.createObjectNode();
         node.put("command", handler.getCommand());
@@ -94,6 +96,14 @@ public class SpendingsReport extends Operation {
         outputNode.set("transactions", commerciantTransactions);
 
         node.set("output", outputNode);
+        output.add(node);
+    }
+
+    private void addOutputMessageToOutput(String key, String value) {
+        ObjectNode node = OBJECT_MAPPER.createObjectNode();
+        node.put("command", handler.getCommand());
+        node.set("output", OBJECT_MAPPER.createObjectNode().put(key, value));
+        node.put("timestamp", handler.getTimestamp());
         output.add(node);
     }
 }

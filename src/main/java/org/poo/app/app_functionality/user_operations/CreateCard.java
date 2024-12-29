@@ -27,11 +27,11 @@ public class CreateCard extends Operation {
             return;
         }
 
-        addTransaction("New card created", account);
+        addTransaction("New card created", account.createCard());
     }
 
-    public void addTransaction(final String description, final Account account) {
-        handler.setCardNumber(account.createOneTimeCard());
+    public void addTransaction(final String description, final String cardNumber) {
+        handler.setCardNumber(cardNumber);
         handler.setDescription(description);
         TransactionHandler.addTransactionCard(handler);
     }

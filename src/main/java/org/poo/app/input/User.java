@@ -8,8 +8,7 @@ import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.SavingsAccount;
 import org.poo.fileio.UserInput;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +22,13 @@ public class User {
     private ArrayList<Account> accounts;
     private ArrayList<Transaction> transactions;
     private HashMap<String, String> aliases;
+    private static LinkedHashMap<String, String> discounts = new LinkedHashMap<>();
+    static {
+        discounts.put("Food", "0.02");
+        discounts.put("Clothes", "0.05");
+        discounts.put("Tech", "0.1");
+    }
+    private LinkedHashMap<String, Integer> userDiscounts = new LinkedHashMap<>();
 
     public User(final String firstName, final String lastName, final String email, final String birthDate, final String occupation) {
         this.firstName = firstName;
@@ -38,6 +44,10 @@ public class User {
         this.accounts = new ArrayList<>();
         this.transactions = new ArrayList<>();
         this.aliases = new HashMap<>();
+
+        this.userDiscounts.put("Food", 0);
+        this.userDiscounts.put("Clothes", 0);
+        this.userDiscounts.put("Tech", 0);
     }
 
     public User(final UserInput user) {

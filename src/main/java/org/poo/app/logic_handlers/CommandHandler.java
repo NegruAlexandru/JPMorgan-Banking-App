@@ -11,6 +11,7 @@ import org.poo.app.app_functionality.debug.PrintTransactions;
 import org.poo.app.app_functionality.user_operations.*;
 
 import org.poo.fileio.CommandInput;
+import org.poo.utils.Operation;
 
 import java.util.List;
 
@@ -68,7 +69,13 @@ public class CommandHandler {
          * @param output ArrayNode to add the response to
          */
         public void executeCommandAndCreateResponse(final ArrayNode output) {
-            OperationFactory.getOperation(this, output).execute();
+//            OperationFactory.getOperation(this, output).execute();
+            //correct way
+
+            //debug way
+            Operation operation = OperationFactory.getOperation(this, output);
+            if (operation != null)
+                operation.execute();
         }
     }
 

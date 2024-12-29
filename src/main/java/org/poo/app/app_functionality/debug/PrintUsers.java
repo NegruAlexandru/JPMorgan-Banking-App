@@ -1,6 +1,7 @@
 package org.poo.app.app_functionality.debug;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.app.logic_handlers.AccountHandler;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
@@ -25,6 +26,14 @@ public class PrintUsers extends Operation {
             node.add(ACCOUNT_HANDLER.visit(u));
         }
 
+        addOutputNodeToOutput(node);
+    }
+
+    private void addOutputNodeToOutput(final ArrayNode outputNode) {
+        ObjectNode node = OBJECT_MAPPER.createObjectNode();
+        node.put("command", handler.getCommand());
+        node.put("timestamp", handler.getTimestamp());
+        node.set("output", outputNode);
         output.add(node);
     }
 }

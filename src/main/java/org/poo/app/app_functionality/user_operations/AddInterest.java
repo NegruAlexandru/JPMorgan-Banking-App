@@ -23,7 +23,8 @@ public class AddInterest extends Operation {
         }
 
         if (!account.getType().equals("savings")) {
-            addMessageToOutput("description", "This is not a savings account");
+            addTransactionToOutput("description", "This is not a savings account");
+            return;
         }
 
         AccountHandler.addFunds(account, account.getBalance()

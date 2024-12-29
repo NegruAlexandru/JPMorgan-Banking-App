@@ -22,6 +22,7 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      */
     public static void addFunds(final String iban, final double amount) {
         Account account = DB.findAccountByIBAN(iban);
+
         if (account != null) {
             account.setBalance(account.getBalance() + amount);
         }
@@ -33,6 +34,9 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void addFunds(final Account account, final double amount) {
+        if (account.getEmail().equals("Andre_Glenn@outlook.us")) {
+            System.out.println("balance: " + account.getBalance());
+        }
         account.setBalance(account.getBalance() + amount);
     }
 
@@ -42,6 +46,9 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void removeFunds(final Account account, final double amount) {
+        if (account.getEmail().equals("Andre_Glenn@outlook.us")) {
+            System.out.println("balance: " + account.getBalance());
+        }
         account.setBalance(account.getBalance() - amount);
     }
 

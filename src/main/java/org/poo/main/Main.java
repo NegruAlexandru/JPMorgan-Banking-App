@@ -85,8 +85,7 @@ public final class Main {
         ArrayNode output = objectMapper.createArrayNode();
 
         for (CommandInput command : inputData.getCommands()) {
-            CommandHandler commandHandler = new CommandHandler(command);
-            commandHandler.executeCommandAndCreateResponse(output);
+            new CommandHandler(command).executeCommandAndCreateResponse(output);
         }
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();

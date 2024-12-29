@@ -17,15 +17,21 @@ public abstract class Operation {
     }
 
     public abstract void execute();
-    public void addMessageToOutput(String key, String value) {
+
+    public void addTransactionToOutput(String key, String value) {
         ObjectNode node = OBJECT_MAPPER.createObjectNode();
         node.put("command", handler.getCommand());
-        node.set("output", OBJECT_MAPPER.createObjectNode().put(key, value));
+
+        ObjectNode outputNode = OBJECT_MAPPER.createObjectNode();
+        outputNode.put(key, value);
+        outputNode.put("timestamp", handler.getTimestamp());
+        node.set("output", outputNode);
+
         node.put("timestamp", handler.getTimestamp());
         output.add(node);
     }
 
-    public void addTransaction(String description) {
+    public void addTransactionToDB(String description) {
         handler.setDescription(description);
         TransactionHandler.addTransactionDescriptionTimestamp(handler);
     }

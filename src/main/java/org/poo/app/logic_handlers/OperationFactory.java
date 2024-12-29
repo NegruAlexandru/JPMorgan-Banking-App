@@ -28,34 +28,45 @@ class OperationFactory {
         printTransactions,
         upgradePlan,
         withdrawSavings,
-        cashWithdrawal
+        cashWithdrawal,
+        acceptSplitPayment,
+        rejectSplitPayment,
+        addNewBusinessAssociate,
+        changeSpendingLimit,
+        businessReport,
+        changeDepositLimit
     }
 
     public static Operation getOperation(final CommandHandler handler, final ArrayNode output) {
         OperationType operationType = OperationType.valueOf(handler.getCommand());
-        switch (operationType) {
-            case addAccount:         return new AddAccount(handler, output);
-            case addFunds:           return new AddFunds(handler, output);
-            case createCard:         return new CreateCard(handler, output);
-            case createOneTimeCard:  return new CreateOneTimeCard(handler, output);
-            case deleteCard:         return new DeleteCard(handler, output);
-            case setMinimumBalance:  return new SetMinimumBalance(handler, output);
-            case sendMoney:          return new SendMoney(handler, output);
-            case setAlias:           return new SetAlias(handler, output);
-            case splitPayment:       return new SplitPayment(handler, output);
-            case deleteAccount:      return new DeleteAccount(handler, output);
-            case payOnline:          return new PayOnline(handler, output);
-            case checkCardStatus:    return new CheckCardStatus(handler, output);
-            case report:             return new Report(handler, output);
-            case addInterest:        return new AddInterest(handler, output);
-            case changeInterestRate: return new ChangeInterestRate(handler, output);
-            case spendingsReport:    return new SpendingsReport(handler, output);
-            case printUsers:         return new PrintUsers(handler, output);
-            case printTransactions:  return new PrintTransactions(handler, output);
-            case upgradePlan:        return new UpgradePlan(handler, output);
-            case withdrawSavings:    return new WithdrawSavings(handler, output);
-            case cashWithdrawal:     return new CashWithdrawal(handler, output);
-        }
-        throw new IllegalArgumentException("Invalid operation type");
+        return switch (operationType) {
+            case addAccount -> new AddAccount(handler, output);
+            case addFunds -> new AddFunds(handler, output);
+            case createCard -> new CreateCard(handler, output);
+            case createOneTimeCard -> new CreateOneTimeCard(handler, output);
+            case deleteCard -> new DeleteCard(handler, output);
+            case setMinimumBalance -> new SetMinimumBalance(handler, output);
+            case sendMoney -> new SendMoney(handler, output);
+            case setAlias -> new SetAlias(handler, output);
+            case splitPayment -> new SplitPayment(handler, output);
+            case deleteAccount -> new DeleteAccount(handler, output);
+            case payOnline -> new PayOnline(handler, output);
+            case checkCardStatus -> new CheckCardStatus(handler, output);
+            case report -> new Report(handler, output);
+            case addInterest -> new AddInterest(handler, output);
+            case changeInterestRate -> new ChangeInterestRate(handler, output);
+            case spendingsReport -> new SpendingsReport(handler, output);
+            case printUsers -> new PrintUsers(handler, output);
+            case printTransactions -> new PrintTransactions(handler, output);
+            case upgradePlan -> new UpgradePlan(handler, output);
+            case withdrawSavings -> new WithdrawSavings(handler, output);
+            case cashWithdrawal -> new CashWithdrawal(handler, output);
+            case acceptSplitPayment -> null;
+            case rejectSplitPayment -> null;
+            case addNewBusinessAssociate -> null;
+            case changeSpendingLimit -> null;
+            case businessReport -> null;
+            case changeDepositLimit -> null;
+        };
     }
 }
