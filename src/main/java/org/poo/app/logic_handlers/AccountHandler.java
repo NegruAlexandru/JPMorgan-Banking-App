@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.app.input.ExchangeRate;
 import org.poo.app.input.User;
-import org.poo.app.user_facilities.Account;
-import org.poo.app.user_facilities.Card;
-import org.poo.app.user_facilities.OneTimeCard;
-import org.poo.app.user_facilities.SavingsAccount;
+import org.poo.app.user_facilities.*;
 import org.poo.utils.AccountVisitor;
 import org.poo.utils.CardVisitor;
 
@@ -34,9 +31,6 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void addFunds(final Account account, final double amount) {
-        if (account.getEmail().equals("Andre_Glenn@outlook.us")) {
-            System.out.println("balance: " + account.getBalance());
-        }
         account.setBalance(account.getBalance() + amount);
     }
 
@@ -46,9 +40,6 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void removeFunds(final Account account, final double amount) {
-        if (account.getEmail().equals("Andre_Glenn@outlook.us")) {
-            System.out.println("balance: " + account.getBalance());
-        }
         account.setBalance(account.getBalance() - amount);
     }
 
@@ -70,6 +61,14 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
         addFunds(receiver, amount);
 
         return amount;
+    }
+
+    public void addNewManager(final BusinessAccount account, final User user) {
+        account.getManagers().add(user);
+    }
+
+    public void addNewEmployee(final BusinessAccount account, final User user) {
+        account.getEmployees().add(user);
     }
 
     /**

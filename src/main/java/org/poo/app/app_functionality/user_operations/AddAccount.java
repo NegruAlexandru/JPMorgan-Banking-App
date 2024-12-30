@@ -23,8 +23,11 @@ public class AddAccount extends Operation {
         Account newAccount;
         if (handler.getAccountType().equals("savings")) {
             newAccount = user.addSavingsAccount(handler.getCurrency(), handler.getInterestRate());
-        } else {
+        } else if (handler.getAccountType().equals("classic")) {
             newAccount = user.addAccount(handler.getCurrency());
+        } else {
+            //
+            return;
         }
 
         addTransaction("New account created", newAccount);

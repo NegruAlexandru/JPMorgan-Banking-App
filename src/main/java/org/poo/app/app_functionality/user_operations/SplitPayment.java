@@ -2,16 +2,25 @@ package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.input.ExchangeRate;
+import org.poo.app.input.User;
 import org.poo.app.logic_handlers.AccountHandler;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.user_facilities.Account;
 import org.poo.utils.Operation;
+import org.poo.utils.RequestSP;
+
+import java.util.ArrayList;
 
 public class SplitPayment extends Operation {
+    ArrayList<User> waitingList;
+    ArrayList<RequestSP> requestsQueue;
+
     public SplitPayment(final CommandHandler handler, final ArrayNode output) {
         super(handler, output);
+        waitingList = new ArrayList<>();
+        requestsQueue = new ArrayList<>();
     }
 
     /**
@@ -19,14 +28,15 @@ public class SplitPayment extends Operation {
      */
     @Override
     public void execute() {
-        if (createTransactionIfSplitInvalid(handler)) {
+        if (createTransactionIfSplitInvalid()) {
             return;
         }
         double initialAmount = handler.getAmount();
 
         for (String account : handler.getAccounts()) {
             Account accountForSplit = DB.findAccountByIBAN(account);
-            double amountToPay = initialAmount / handler.getAccounts().size();
+            double amountToPay = getAmountForAccount(account, initialAmount);
+
             handler.setAmount(amountToPay);
 
             amountToPay = DB.convert(amountToPay,
@@ -39,6 +49,40 @@ public class SplitPayment extends Operation {
         }
     }
 
+    public void checkForSplitPayment(final RequestSP request) {
+        if (!request.isAccepted()) {
+            // Error message
+
+
+            // Cancel all requests for this split payment
+            for (RequestSP req : requestsQueue) {
+                req.setCancelled(true);
+            }
+
+            return;
+        }
+
+        requestsQueue.remove(request);
+
+        if (requestsQueue.isEmpty()) {
+            this.execute();
+        }
+    }
+
+    public void sendRequestNotifications() {
+        for (String account : handler.getAccounts()) {
+            User user = DB.findUserByEmail(DB.findAccountByIBAN(account).getEmail());
+            sendRequestNotification(user);
+        }
+    }
+
+    public void sendRequestNotification(final User user) {
+        RequestSP request = new RequestSP(user, this);
+        user.addRequestSP(request);
+        requestsQueue.add(request);
+        waitingList.add(user);
+    }
+
     public void addTransaction(final String description, final Account account) {
         handler.setEmail(account.getEmail());
         handler.setDescription(description);
@@ -48,14 +92,13 @@ public class SplitPayment extends Operation {
 
     /**
      * Search for account without funds for split payment
-     * @param handler current CommandHandler object
      * @return last account without funds or null if all accounts have funds
      */
-    private Account searchForAccountWithoutFundsForSplit(final CommandHandler handler) {
+    private Account searchForAccountWithoutFundsForSplit() {
         Account accountWithoutFunds = null;
         for (String account : handler.getAccounts()) {
             Account accountForSplit = DB.findAccountByIBAN(account);
-            double amountToPay = handler.getAmount() / handler.getAccounts().size();
+            double amountToPay = getAmountForAccount(account, handler.getAmount());
 
             if (accountForSplit == null) {
                 return accountWithoutFunds;
@@ -74,16 +117,14 @@ public class SplitPayment extends Operation {
 
     /**
      * Create transaction if split payment is invalid
-     * @param handler current CommandHandler object
      * @return true if split payment is invalid
      */
-    private boolean createTransactionIfSplitInvalid(final CommandHandler handler) {
-        Account accountWithoutFunds = searchForAccountWithoutFundsForSplit(handler);
+    private boolean createTransactionIfSplitInvalid() {
+        Account accountWithoutFunds = searchForAccountWithoutFundsForSplit();
+        double fullAmount = handler.getAmount();
         if (accountWithoutFunds != null) {
-            double amountToPay = handler.getAmount() / handler.getAccounts().size();
-            double fullAmount = handler.getAmount();
-
             for (String acc : handler.getAccounts()) {
+                double amountToPay = getAmountForAccount(acc, fullAmount);
                 Account accForSplit = DB.findAccountByIBAN(acc);
                 addTransaction("Split payment of "
                         + String.format("%.2f", fullAmount) + " " + handler.getCurrency(),
@@ -106,5 +147,13 @@ public class SplitPayment extends Operation {
         handler.setAmount(amount);
         handler.setErrorMessage(errorMessage);
         TransactionHandler.addTransactionErrorSplitPayment(handler);
+    }
+
+    public double getAmountForAccount(String account, double fullAmount) {
+        if (handler.getSplitPaymentType().equals("equal")) {
+            return fullAmount / handler.getAccounts().size();
+        } else {
+            return handler.getAmountForUsers().get(handler.getAccounts().indexOf(account));
+        }
     }
 }

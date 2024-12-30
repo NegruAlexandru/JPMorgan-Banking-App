@@ -36,6 +36,9 @@ public class CommandHandler {
     private String classicAccountIBAN;
     private String savingsAccountIBAN;
     private String newPlanType;
+    private String splitPaymentType;
+    private List<Double> amountForUsers;
+    private String role;
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 
@@ -58,6 +61,10 @@ public class CommandHandler {
         this.accountType = command.getAccountType();
         this.interestRate = command.getInterestRate();
         this.accounts = command.getAccounts();
+        this.newPlanType = command.getNewPlanType();
+        this.splitPaymentType = command.getSplitPaymentType();
+        this.amountForUsers = command.getAmountForUsers();
+        this.role = command.getRole();
     }
 
         /**

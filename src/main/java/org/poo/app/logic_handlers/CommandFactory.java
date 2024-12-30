@@ -61,9 +61,9 @@ class CommandFactory {
             case upgradePlan ->             new UpgradePlanCommand(executor, handler, output);
             case withdrawSavings ->         new WithdrawSavingsCommand(executor, handler, output);
             case cashWithdrawal ->          new CashWithdrawalCommand(executor, handler, output);
-            case acceptSplitPayment -> null;
-            case rejectSplitPayment -> null;
-            case addNewBusinessAssociate -> null;
+            case acceptSplitPayment ->      new AcceptSplitPaymentCommand(executor, handler, output);
+            case rejectSplitPayment ->      new RejectSplitPaymentCommand(executor, handler, output);
+            case addNewBusinessAssociate -> new AddNewBusinessAssociateCommand(executor, handler, output);
             case changeSpendingLimit -> null;
             case businessReport -> null;
             case changeDepositLimit -> null;

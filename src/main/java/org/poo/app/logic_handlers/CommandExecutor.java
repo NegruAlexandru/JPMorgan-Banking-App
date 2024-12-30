@@ -73,7 +73,7 @@ public class CommandExecutor {
     }
 
     public void splitPayment(CommandHandler handler, ArrayNode output) {
-        new SplitPayment(handler, output).execute();
+        new SplitPayment(handler, output).sendRequestNotifications();
     }
 
     public void spendingsReport(CommandHandler handler, ArrayNode output) {
@@ -92,27 +92,27 @@ public class CommandExecutor {
         new UpgradePlan(handler, output).execute();
     }
 
-//    public void acceptSplitPayment(CommandHandler handler, ArrayNode output) {
-//        new AcceptSplitPayment(handler, output).execute();
+    public void acceptSplitPayment(CommandHandler handler, ArrayNode output) {
+        new AcceptSplitPayment(handler, output).execute();
+    }
+
+    public void rejectSplitPayment(CommandHandler handler, ArrayNode output) {
+        new RejectSplitPayment(handler, output).execute();
+    }
+
+    public void addNewBusinessAssociate(CommandHandler handler, ArrayNode output) {
+        new AddNewBusinessAssociate(handler, output).execute();
+    }
+
+//    public void changeDepositLimit(CommandHandler handler, ArrayNode output) {
+//        new ChangeDepositLimit(handler, output).execute();
 //    }
-//
-//    public void rejectSplitPayment(CommandHandler handler, ArrayNode output) {
-//        new RejectSplitPayment(handler, output).execute();
-//    }
-//
-//    public void addNewBusinessAssociate(CommandHandler handler, ArrayNode output) {
-//        new AddNewBusinessAssociate(handler, output).execute();
-//    }
-//
+
 //    public void changeSpendingLimit(CommandHandler handler, ArrayNode output) {
 //        new ChangeSpendingLimit(handler, output).execute();
 //    }
 //
 //    public void businessReport(CommandHandler handler, ArrayNode output) {
 //        new BusinessReport(handler, output).execute();
-//    }
-//
-//    public void changeDepositLimit(CommandHandler handler, ArrayNode output) {
-//        new ChangeDepositLimit(handler, output).execute();
 //    }
 }

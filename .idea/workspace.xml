@@ -4,34 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4204c72-f8a4-4c9c-bff4-f07df1652e47" name="Changes" comment="debugged for first version functionality">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddFundsCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddInterestCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/CashWithdrawalCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/ChangeInterestRateCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/CheckCardStatusCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/CreateCardCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/CreateOneTimeCardCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/DeleteAccountCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/DeleteCardCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/PayOnlineCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/PrintTransactionsCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/PrintUsersCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/ReportCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SendMoneyCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SetAliasCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SetMinimumBalanceCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SpendingsReportCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/SplitPaymentCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/UpgradePlanCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/WithdrawSavingsCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandFactory.java" afterDir="false" />
+    <list default="true" id="c4204c72-f8a4-4c9c-bff4-f07df1652e47" name="Changes" comment="implemented command design pattern and removed template pattern">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AcceptSplitPaymentCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddNewBusinessAssociateCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/RejectSplitPaymentCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AcceptSplitPayment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddNewBusinessAssociate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/RejectSplitPayment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/BusinessAccount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/RequestSP.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddAccountCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddAccountCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddAccount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SplitPayment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SplitPayment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/input/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/input/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/AccountHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/AccountHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/OperationFactory.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,14 +73,14 @@
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/alexi/Documents/Facultate materiale/POO/Teme/Etapa2",
+    "last_opened_file_path": "C:/Users/alexi/Documents/Facultate materiale/POO/Teme/Tema0",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/alexi/Documents/Facultate materiale/POO/Teme/Etapa2/src/main/java/org/example/Main.java",
-    "settings.editor.selected.configurable": "editor.preferences.tabs",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -163,7 +152,9 @@
       <workItem from="1735327900391" duration="11000" />
       <workItem from="1735327922036" duration="903000" />
       <workItem from="1735328893475" duration="6425000" />
-      <workItem from="1735485941395" duration="16412000" />
+      <workItem from="1735485941395" duration="16810000" />
+      <workItem from="1735569570704" duration="4625000" />
+      <workItem from="1735577126941" duration="12246000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <option name="closed" value="true" />
@@ -197,7 +188,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735502484732</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="implemented command design pattern and removed template pattern">
+      <option name="closed" value="true" />
+      <created>1735505884056</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1735505884056</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -219,7 +218,8 @@
     <MESSAGE value="implemented WithdrawSavings, CashWithdrawal, UpgradePlan" />
     <MESSAGE value="introduced factory and template dp" />
     <MESSAGE value="debugged for first version functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="debugged for first version functionality" />
+    <MESSAGE value="implemented command design pattern and removed template pattern" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented command design pattern and removed template pattern" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -229,6 +229,10 @@
           <line>13</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.util.NoSuchElementException" package="java.util" />
+          <option name="timeStamp" value="4" />
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

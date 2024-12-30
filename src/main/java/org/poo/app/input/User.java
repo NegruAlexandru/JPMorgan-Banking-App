@@ -7,6 +7,7 @@ import org.poo.app.logic_handlers.DB;
 import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.SavingsAccount;
 import org.poo.fileio.UserInput;
+import org.poo.utils.RequestSP;
 
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class User {
         discounts.put("Tech", "0.1");
     }
     private LinkedHashMap<String, Integer> userDiscounts = new LinkedHashMap<>();
+    private ArrayList<RequestSP> splitPaymentRequests = new ArrayList<>();
 
     public User(final String firstName, final String lastName, final String email, final String birthDate, final String occupation) {
         this.firstName = firstName;
@@ -44,6 +46,7 @@ public class User {
         this.accounts = new ArrayList<>();
         this.transactions = new ArrayList<>();
         this.aliases = new HashMap<>();
+//        this.splitPaymentRequests = new ArrayList<>();
 
         this.userDiscounts.put("Food", 0);
         this.userDiscounts.put("Clothes", 0);
@@ -99,5 +102,9 @@ public class User {
         account.deleteAllCards();
 
         return account;
+    }
+
+    public void addRequestSP(final RequestSP request) {
+        splitPaymentRequests.add(request);
     }
 }
