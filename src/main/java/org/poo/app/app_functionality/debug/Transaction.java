@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.poo.app.input.User;
 import org.poo.app.user_facilities.Account;
+import org.poo.app.user_facilities.BusinessAccount;
 
 import java.util.List;
 
@@ -29,6 +31,9 @@ public final class Transaction {
     private String errorMessage;
     private String classicAccountIBAN;
     private String savingsAccountIBAN;
+    private User businessAssociatedUser;
+    private String newPlanType;
+    private String accountIBAN;
 
     private Transaction(final Builder builder) {
         this.timestamp = builder.timestamp;
@@ -47,6 +52,9 @@ public final class Transaction {
         this.errorMessage = builder.errorMessage;
         this.classicAccountIBAN = builder.classicAccountIBAN;
         this.savingsAccountIBAN = builder.savingsAccountIBAN;
+        this.businessAssociatedUser = builder.businessAssociatedUser;
+        this.newPlanType = builder.newPlanType;
+        this.accountIBAN = builder.accountIBAN;
     }
 
     public static final class Builder {
@@ -66,6 +74,9 @@ public final class Transaction {
         private String errorMessage;
         private String classicAccountIBAN;
         private String savingsAccountIBAN;
+        private User businessAssociatedUser;
+        private String newPlanType;
+        private String accountIBAN;
 
         public Builder(final int timestamp, final String description) {
             this.timestamp = timestamp;
@@ -226,6 +237,21 @@ public final class Transaction {
             return this;
         }
 
+        public Builder businessAssociatedUser(final User businessAssociatedUser) {
+            this.businessAssociatedUser = businessAssociatedUser;
+            return this;
+        }
+
+        public Builder newPlanType(final String newPlanType) {
+            this.newPlanType = newPlanType;
+            return this;
+        }
+
+        public Builder accountIBAN(final String accountIBAN) {
+            this.accountIBAN = accountIBAN;
+            return this;
+        }
+
         /**
          * Builds the Transaction object
          *
@@ -242,6 +268,10 @@ public final class Transaction {
      */
     public void addTransaction(final Account account) {
         account.getTransactions().add(this);
+    }
+
+    public void addBusinessTransaction(final BusinessAccount account) {
+        account.getBusinessTransactions().add(this);
     }
 
     /**
@@ -318,6 +348,18 @@ public final class Transaction {
 
         if (transaction.getSavingsAccountIBAN() != null) {
             transactionNode.put("savingsAccountIBAN", transaction.getSavingsAccountIBAN());
+        }
+
+        if (transaction.getBusinessAssociatedUser() != null) {
+            transactionNode.put("businessAssociatedUser", transaction.getBusinessAssociatedUser().getEmail());
+        }
+
+        if (transaction.getNewPlanType() != null) {
+            transactionNode.put("newPlanType", transaction.getNewPlanType());
+        }
+
+        if (transaction.getAccountIBAN() != null) {
+            transactionNode.put("accountIBAN", transaction.getAccountIBAN());
         }
 
         return transactionNode;

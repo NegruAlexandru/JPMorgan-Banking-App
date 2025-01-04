@@ -22,8 +22,6 @@ public class SpendingsReport extends Operation {
      * Create a spending report for an account
      */
     public void execute() {
-        ObjectNode output = OBJECT_MAPPER.createObjectNode();
-
         Account account = DB.findAccountByIBAN(handler.getAccount());
         if (account == null) {
             addTransactionToOutput("description", "Account not found");

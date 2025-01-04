@@ -20,16 +20,9 @@ public class User {
     private String birthDate;
     private String occupation;
     private String plan;
-    private ArrayList<Account> accounts;
-    private ArrayList<Transaction> transactions;
-    private HashMap<String, String> aliases;
-    private static LinkedHashMap<String, String> discounts = new LinkedHashMap<>();
-    static {
-        discounts.put("Food", "0.02");
-        discounts.put("Clothes", "0.05");
-        discounts.put("Tech", "0.1");
-    }
-    private LinkedHashMap<String, Integer> userDiscounts = new LinkedHashMap<>();
+    private ArrayList<Account> accounts = new ArrayList<>();
+    private ArrayList<Transaction> transactions = new ArrayList<>();
+    private HashMap<String, String> aliases = new HashMap<>();
     private ArrayList<RequestSP> splitPaymentRequests = new ArrayList<>();
 
     public User(final String firstName, final String lastName, final String email, final String birthDate, final String occupation) {
@@ -41,16 +34,8 @@ public class User {
         if (occupation.equals("student")) {
             this.plan = "student";
         } else {
-            this.plan = "classic";
+            this.plan = "standard";
         }
-        this.accounts = new ArrayList<>();
-        this.transactions = new ArrayList<>();
-        this.aliases = new HashMap<>();
-//        this.splitPaymentRequests = new ArrayList<>();
-
-        this.userDiscounts.put("Food", 0);
-        this.userDiscounts.put("Clothes", 0);
-        this.userDiscounts.put("Tech", 0);
     }
 
     public User(final UserInput user) {
@@ -59,9 +44,11 @@ public class User {
         this.email = user.getEmail();
         this.birthDate = user.getBirthDate();
         this.occupation = user.getOccupation();
-        this.accounts = new ArrayList<>();
-        this.transactions = new ArrayList<>();
-        this.aliases = new HashMap<>();
+        if (occupation.equals("student")) {
+            this.plan = "student";
+        } else {
+            this.plan = "standard";
+        }
     }
 
     /**

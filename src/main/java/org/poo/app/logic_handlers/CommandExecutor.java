@@ -104,15 +104,15 @@ public class CommandExecutor {
         new AddNewBusinessAssociate(handler, output).execute();
     }
 
-//    public void changeDepositLimit(CommandHandler handler, ArrayNode output) {
-//        new ChangeDepositLimit(handler, output).execute();
-//    }
+    public void changeDepositLimit(CommandHandler handler, ArrayNode output) {
+        new ChangeDepositLimit(handler, output).execute();
+    }
 
-//    public void changeSpendingLimit(CommandHandler handler, ArrayNode output) {
-//        new ChangeSpendingLimit(handler, output).execute();
-//    }
-//
-//    public void businessReport(CommandHandler handler, ArrayNode output) {
-//        new BusinessReport(handler, output).execute();
-//    }
+    public void changeSpendingLimit(CommandHandler handler, ArrayNode output) {
+        new ChangeSpendingLimit(handler, output).execute();
+    }
+
+    public void businessReport(CommandHandler handler, ArrayNode output) {
+        new BusinessReport(handler, output).execute();
+    }
 }

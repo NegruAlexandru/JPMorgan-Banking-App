@@ -4,23 +4,49 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4204c72-f8a4-4c9c-bff4-f07df1652e47" name="Changes" comment="implemented command design pattern and removed template pattern">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AcceptSplitPaymentCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/AddNewBusinessAssociateCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/RejectSplitPaymentCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AcceptSplitPayment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddNewBusinessAssociate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/RejectSplitPayment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/BusinessAccount.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/utils/RequestSP.java" afterDir="false" />
+    <list default="true" id="c4204c72-f8a4-4c9c-bff4-f07df1652e47" name="Changes" comment="added SplitPayment based on accept and reject system">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/BusinessReportCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/ChangeDepositLimitCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/commands/ChangeSpendingLimitCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/BusinessReport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/ChangeDepositLimit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/ChangeSpendingLimit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/Discount.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddAccount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input/test01_user_updates.json" beforeDir="false" afterPath="$PROJECT_DIR$/input/test01_user_updates.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input/test07_simple_split_payment.json" beforeDir="false" afterPath="$PROJECT_DIR$/input/test07_simple_split_payment.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input/test12_split_and_spend.json" beforeDir="false" afterPath="$PROJECT_DIR$/input/test12_split_and_spend.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test03_commisions.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test03_commisions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test04_commisions_advanced.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test04_commisions_advanced.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test05_savings_update.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test05_savings_update.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test06_cashback.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test06_cashback.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test07_simple_split_payment.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test07_simple_split_payment.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test08_advanced_split_payment.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test08_advanced_split_payment.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test09_business_account_simple.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test09_business_account_simple.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test10_business_account_limits.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test10_business_account_limits.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test11_errors.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test11_errors.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ref/ref_test12_split_and_spend.json" beforeDir="false" afterPath="$PROJECT_DIR$/ref/ref_test12_split_and_spend.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/debug/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/debug/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AcceptSplitPayment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AcceptSplitPayment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddNewBusinessAssociate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/AddNewBusinessAssociate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CashWithdrawal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/CashWithdrawal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/DeleteAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/DeleteAccount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/PayOnline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/PayOnline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SendMoney.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SendMoney.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SpendingsReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SpendingsReport.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SplitPayment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/SplitPayment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/UpgradePlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/app_functionality/user_operations/UpgradePlan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/input/Commerciant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/input/Commerciant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/input/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/input/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/AccountHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/AccountHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/CommandHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/DB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/PaymentHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/PaymentHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/TransactionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/logic_handlers/TransactionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/Account.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/BusinessAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/poo/app/user_facilities/BusinessAccount.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +93,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
-    "Application.Test.executor": "Run",
+    "Application.Test.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
@@ -154,7 +180,12 @@
       <workItem from="1735328893475" duration="6425000" />
       <workItem from="1735485941395" duration="16810000" />
       <workItem from="1735569570704" duration="4625000" />
-      <workItem from="1735577126941" duration="12246000" />
+      <workItem from="1735577126941" duration="12305000" />
+      <workItem from="1735634702704" duration="5459000" />
+      <workItem from="1735640226157" duration="2000" />
+      <workItem from="1735640246500" duration="539000" />
+      <workItem from="1735834504513" duration="2859000" />
+      <workItem from="1735908033505" duration="18807000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <option name="closed" value="true" />
@@ -196,7 +227,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735505884056</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added SplitPayment based on accept and reject system">
+      <option name="closed" value="true" />
+      <created>1735597046834</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1735597046834</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -219,7 +258,8 @@
     <MESSAGE value="introduced factory and template dp" />
     <MESSAGE value="debugged for first version functionality" />
     <MESSAGE value="implemented command design pattern and removed template pattern" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented command design pattern and removed template pattern" />
+    <MESSAGE value="added SplitPayment based on accept and reject system" />
+    <option name="LAST_COMMIT_MESSAGE" value="added SplitPayment based on accept and reject system" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

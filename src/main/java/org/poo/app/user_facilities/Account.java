@@ -10,6 +10,7 @@ import org.poo.utils.AccountVisitor;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class Account implements AccountInterface {
     private String type;
     private ArrayList<Card> cards;
     private ArrayList<Transaction> transactions;
+    private ArrayList<Discount> discounts = new ArrayList<>();
 
     public Account(final String email, final String currency) {
         this.email = email;

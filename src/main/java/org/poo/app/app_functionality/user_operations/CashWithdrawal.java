@@ -1,11 +1,11 @@
 package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.logic_handlers.AccountHandler;
-import org.poo.app.logic_handlers.CommandHandler;
-import org.poo.app.logic_handlers.DB;
+import org.poo.app.input.ExchangeRate;
+import org.poo.app.logic_handlers.*;
 import org.poo.app.input.User;
 import org.poo.app.user_facilities.Account;
+import org.poo.app.user_facilities.Card;
 import org.poo.utils.Operation;
 
 public class CashWithdrawal extends Operation {
@@ -18,6 +18,15 @@ public class CashWithdrawal extends Operation {
      */
     @Override
     public void execute() {
+        Card card = DB.getCardByCardNumber(handler.getCardNumber());
+
+        if (card == null) {
+            //Card not found
+            addTransactionToOutput("description", "Card not found");
+            return;
+        }
+
+
         Account account = DB.findAccountByCardNumber(handler.getCardNumber());
 
         // ???
@@ -42,13 +51,23 @@ public class CashWithdrawal extends Operation {
             return;
         }
 
-        if (account.getBalance() < handler.getAmount()) {
+        double amount = handler.getAmount();
+        ExchangeRate exchangeRate = DB.getExchangeRate("RON", account.getCurrency());
+        amount *= exchangeRate.getRate();
+        amount = PaymentHandler.getAmountAfterFees(user, amount);
+
+        if (account.getBalance() < amount) {
             //Insufficient funds
             addTransactionToDB("Insufficient funds");
             return;
         }
 
-        AccountHandler.removeFunds(account, handler.getAmount());
         addTransactionToDB("Cash withdrawal of " + handler.getAmount());
+        account.setBalance(account.getBalance() - amount);
+    }
+
+    public void addTransactionToDB(final String description) {
+        handler.setDescription(description);
+        TransactionHandler.cashWithdrawalTransactionToDB(handler);
     }
 }

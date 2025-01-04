@@ -246,6 +246,26 @@ public abstract class DB {
         return null;
     }
 
+    public static Commerciant getCommerciantByName(final String name) {
+        for (Commerciant commerciant : commerciants) {
+            if (commerciant.getCommerciant().equals(name)) {
+                return commerciant;
+            }
+        }
+
+        return null;
+    }
+
+    public static Commerciant getCommerciantByIBAN(final String iban) {
+        for (Commerciant commerciant : commerciants) {
+            if (commerciant.getAccount().equals(iban)) {
+                return commerciant;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Reset the database
      */

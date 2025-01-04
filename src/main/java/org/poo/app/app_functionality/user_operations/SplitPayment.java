@@ -71,7 +71,12 @@ public class SplitPayment extends Operation {
 
     public void sendRequestNotifications() {
         for (String account : handler.getAccounts()) {
-            User user = DB.findUserByEmail(DB.findAccountByIBAN(account).getEmail());
+            Account accountForSplit = DB.findAccountByIBAN(account);
+            if (accountForSplit == null) {
+                return;
+            }
+
+            User user = DB.findUserByEmail(accountForSplit.getEmail());
             sendRequestNotification(user);
         }
     }

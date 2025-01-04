@@ -39,6 +39,7 @@ public class CommandHandler {
     private String splitPaymentType;
     private List<Double> amountForUsers;
     private String role;
+    private String type;
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 
@@ -65,6 +66,7 @@ public class CommandHandler {
         this.splitPaymentType = command.getSplitPaymentType();
         this.amountForUsers = command.getAmountForUsers();
         this.role = command.getRole();
+        this.type = command.getType();
     }
 
         /**

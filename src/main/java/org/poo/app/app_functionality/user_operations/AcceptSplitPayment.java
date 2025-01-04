@@ -20,6 +20,10 @@ public class AcceptSplitPayment extends Operation {
             return;
         }
 
+        // check check check
+        if (user.getSplitPaymentRequests().isEmpty()) {
+            return;
+        }
         RequestSP request = user.getSplitPaymentRequests().getFirst();
 
         while (request.isCancelled()) {

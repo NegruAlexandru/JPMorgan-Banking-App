@@ -1,10 +1,8 @@
 package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.logic_handlers.AccountHandler;
-import org.poo.app.logic_handlers.CommandHandler;
-import org.poo.app.logic_handlers.DB;
-import org.poo.app.logic_handlers.TransactionHandler;
+import org.poo.app.input.ExchangeRate;
+import org.poo.app.logic_handlers.*;
 import org.poo.app.user_facilities.Account;
 import org.poo.utils.Operation;
 
@@ -24,6 +22,17 @@ public class SendMoney extends Operation {
             receiverAccount = DB.findAccountByIBAN(DB.findUserByEmail(senderAccount.getEmail()).getAliases().get(handler.getAlias()));
         } else {
             receiverAccount = DB.findAccountByIBAN(handler.getReceiver());
+
+            if (receiverAccount == null && senderAccount.getType().equals("business")) {
+                // receiver account maybe is a commerciant
+
+                if (DB.getCommerciantByIBAN(handler.getReceiver()) != null) {
+                    // TODO: implement commerciant payment
+
+                    // use / add discount
+                }
+                return;
+            }
         }
 
         if (senderAccount == null || receiverAccount == null) {

@@ -20,6 +20,10 @@ public class DeleteAccount extends Operation {
         User user = DB.findUserByEmail(handler.getEmail());
         Account account = DB.findAccountByIBAN(handler.getAccount());
 
+        if (account == null) {
+            return;
+        }
+
         if (account.getBalance() == 0) {
             user.deleteAccount(account);
             addTransactionToOutput("success", "Account deleted");

@@ -19,7 +19,7 @@ public class AddNewBusinessAssociate extends Operation {
      *
      */
     public void execute() {
-        BusinessAccount account = (BusinessAccount) DB.findAccountByIBAN(handler.getAccount());
+        Account account = DB.findAccountByIBAN(handler.getAccount());
         // account - care de business
         // email - of associate
 
@@ -27,12 +27,18 @@ public class AddNewBusinessAssociate extends Operation {
             return;
         }
 
+        if (!account.getType().equals("business")) {
+            return;
+        }
+
+        BusinessAccount businessAccount = (BusinessAccount) account;
+
         User user = DB.findUserByEmail(handler.getEmail());
 
         if (handler.getRole().equals("employee")) {
-            new AccountHandler().addNewEmployee(account, user);
+            new AccountHandler().addNewEmployee(businessAccount, user);
         } else if (handler.getRole().equals("manager")) {
-            new AccountHandler().addNewManager(account, user);
+            new AccountHandler().addNewManager(businessAccount, user);
         }
     }
 }

@@ -64,9 +64,9 @@ class CommandFactory {
             case acceptSplitPayment ->      new AcceptSplitPaymentCommand(executor, handler, output);
             case rejectSplitPayment ->      new RejectSplitPaymentCommand(executor, handler, output);
             case addNewBusinessAssociate -> new AddNewBusinessAssociateCommand(executor, handler, output);
-            case changeSpendingLimit -> null;
-            case businessReport -> null;
-            case changeDepositLimit -> null;
+            case changeSpendingLimit ->     new ChangeSpendingLimitCommand(executor, handler, output);
+            case changeDepositLimit ->      new ChangeDepositLimitCommand(executor, handler, output);
+            case businessReport ->          new BusinessReportCommand(executor, handler, output);
         };
     }
 }

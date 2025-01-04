@@ -1,6 +1,8 @@
 package org.poo.app.logic_handlers;
 
 import org.poo.app.app_functionality.debug.Transaction;
+import org.poo.app.input.User;
+import org.poo.app.user_facilities.Account;
 
 public abstract class TransactionHandler {
     /**
@@ -70,7 +72,7 @@ public abstract class TransactionHandler {
                 .amountDouble(commandHandler.getAmount())
                 .commerciant(commandHandler.getCommerciant())
                 .build();
-        transaction.addTransaction(DB.findAccountByCardNumber(commandHandler.getCardNumber()));
+        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
     }
 
     /**
@@ -112,6 +114,33 @@ public abstract class TransactionHandler {
                 .amountDouble(commandHandler.getAmount())
                 .classicAccountIBAN(commandHandler.getClassicAccountIBAN())
                 .savingsAccountIBAN(commandHandler.getSavingsAccountIBAN())
+                .build();
+        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
+    }
+
+    public static void addBusinessPayOnlineTransaction(final CommandHandler commandHandler, final User user) {
+        Transaction transaction = new Transaction.Builder(commandHandler.getTimestamp(),
+                commandHandler.getDescription())
+                .businessAssociatedUser(user)
+                .amountDouble(commandHandler.getAmount())
+                .commerciant(commandHandler.getCommerciant())
+                .build();
+        transaction.addTransaction(DB.findAccountByCardNumber(commandHandler.getCardNumber()));
+    }
+
+    public static void addUpgradePlanTransactionToDB(final CommandHandler commandHandler) {
+        Transaction transaction = new Transaction.Builder(commandHandler.getTimestamp(),
+                commandHandler.getDescription())
+                .newPlanType(commandHandler.getNewPlanType())
+                .accountIBAN(commandHandler.getAccount())
+                .build();
+        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
+    }
+
+    public static void cashWithdrawalTransactionToDB(final CommandHandler commandHandler) {
+        Transaction transaction = new Transaction.Builder(commandHandler.getTimestamp(),
+                commandHandler.getDescription())
+                .amountDouble(commandHandler.getAmount())
                 .build();
         transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
     }

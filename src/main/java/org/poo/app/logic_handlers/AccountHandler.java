@@ -52,7 +52,11 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      */
     public static double transferFunds(final Account sender,
                                        final Account receiver, double amount) {
-        removeFunds(sender, amount);
+
+        User user = DB.findUserByEmail(sender.getEmail());
+        double amountAndFees = PaymentHandler.getAmountAfterFees(user, amount);
+
+        removeFunds(sender, amountAndFees);
 
         ExchangeRate exchangeRate = DB.getExchangeRate(sender.getCurrency(),
                 receiver.getCurrency());
