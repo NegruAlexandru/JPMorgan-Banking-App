@@ -15,8 +15,6 @@ public class Commerciant {
     private String account;
     private String type;
     private String cashbackStrategy;
-    private LinkedHashMap<Account, Integer> nrOfTransactionsOfUsers = new LinkedHashMap<>();
-    private LinkedHashMap<Account, Double> totalSpentByUsers = new LinkedHashMap<>();
 
     public Commerciant(final CommerciantInput commerciantInput) {
         this.commerciant = commerciantInput.getCommerciant();

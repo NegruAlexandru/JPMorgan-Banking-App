@@ -13,25 +13,14 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
-     * Adds funds to an account
-     * @param iban IBAN of the account
-     * @param amount amount to add
-     */
-    public static void addFunds(final String iban, final double amount) {
-        Account account = DB.findAccountByIBAN(iban);
-
-        if (account != null) {
-            account.setBalance(account.getBalance() + amount);
-        }
-    }
-
-    /**
      * Removes funds from an account
      * @param account account to add funds to
      * @param amount amount to remove
      */
     public static void addFunds(final Account account, final double amount) {
-        account.setBalance(account.getBalance() + amount);
+        account.setBalance(Math.round((account.getBalance() + amount) * 100.0) / 100.0);
+//        System.out.println(account.getBalance());
+//        account.setBalance(account.getBalance() + amount);
     }
 
     /**
@@ -40,7 +29,9 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void removeFunds(final Account account, final double amount) {
-        account.setBalance(account.getBalance() - amount);
+        account.setBalance(Math.round((account.getBalance() - amount) * 100.0) / 100.0);
+//        System.out.println(account.getBalance());
+//        account.setBalance(account.getBalance() - amount);
     }
 
     /**
@@ -54,13 +45,11 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
                                        final Account receiver, double amount) {
 
         User user = DB.findUserByEmail(sender.getEmail());
-        double amountAndFees = PaymentHandler.getAmountAfterFees(user, amount);
+        double amountAndFees = PaymentHandler.getAmountAfterFees(user, sender, amount);
 
         removeFunds(sender, amountAndFees);
 
-        ExchangeRate exchangeRate = DB.getExchangeRate(sender.getCurrency(),
-                receiver.getCurrency());
-        amount *= exchangeRate.getRate();
+        amount = DB.convert(amount, sender.getCurrency(), receiver.getCurrency());
 
         addFunds(receiver, amount);
 

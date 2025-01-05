@@ -34,6 +34,8 @@ public final class Transaction {
     private User businessAssociatedUser;
     private String newPlanType;
     private String accountIBAN;
+    private List<Double> amountForUsers;
+    private String splitPaymentType;
 
     private Transaction(final Builder builder) {
         this.timestamp = builder.timestamp;
@@ -55,6 +57,8 @@ public final class Transaction {
         this.businessAssociatedUser = builder.businessAssociatedUser;
         this.newPlanType = builder.newPlanType;
         this.accountIBAN = builder.accountIBAN;
+        this.amountForUsers = builder.amountForUsers;
+        this.splitPaymentType = builder.splitPaymentType;
     }
 
     public static final class Builder {
@@ -77,6 +81,8 @@ public final class Transaction {
         private User businessAssociatedUser;
         private String newPlanType;
         private String accountIBAN;
+        private List<Double> amountForUsers;
+        private String splitPaymentType;
 
         public Builder(final int timestamp, final String description) {
             this.timestamp = timestamp;
@@ -252,6 +258,16 @@ public final class Transaction {
             return this;
         }
 
+        public Builder amountForUsers(final List<Double> amountForUsers) {
+            this.amountForUsers = amountForUsers;
+            return this;
+        }
+
+        public Builder splitPaymentType(final String splitPaymentType) {
+            this.splitPaymentType = splitPaymentType;
+            return this;
+        }
+
         /**
          * Builds the Transaction object
          *
@@ -360,6 +376,18 @@ public final class Transaction {
 
         if (transaction.getAccountIBAN() != null) {
             transactionNode.put("accountIBAN", transaction.getAccountIBAN());
+        }
+
+        if (transaction.getAmountForUsers() != null) {
+            ArrayNode amounts = OBJECT_MAPPER.createArrayNode();
+            for (Double amount : transaction.getAmountForUsers()) {
+                amounts.add(amount);
+            }
+            transactionNode.set("amountForUsers", amounts);
+        }
+
+        if (transaction.getSplitPaymentType() != null) {
+            transactionNode.put("splitPaymentType", transaction.getSplitPaymentType());
         }
 
         return transactionNode;

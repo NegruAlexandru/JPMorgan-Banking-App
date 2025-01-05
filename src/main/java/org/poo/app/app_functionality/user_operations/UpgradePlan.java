@@ -2,6 +2,7 @@ package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.input.ExchangeRate;
+import org.poo.app.logic_handlers.AccountHandler;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.input.User;
@@ -50,8 +51,7 @@ public class UpgradePlan extends Operation {
         }
 
         double sumToPay = calculateSumToPay(user, handler);
-        ExchangeRate exchangeRate = DB.getExchangeRate("RON", account.getCurrency());
-        sumToPay *= exchangeRate.getRate();
+        sumToPay = DB.convert(sumToPay, "RON", account.getCurrency());
 
         if (sumToPay == 0) {
             //You cannot downgrade your plan.
@@ -59,14 +59,13 @@ public class UpgradePlan extends Operation {
             return;
         }
 
-        if (account.getBalance() < sumToPay * exchangeRate.getRate()) {
+        if (account.getBalance() < sumToPay) {
             //Insufficient funds
             addTransactionToDB("Insufficient funds");
             return;
         }
 
-        account.setBalance(account.getBalance() - sumToPay);
-        account.setBalance(Math.round(account.getBalance() * 100.0) / 100.0);
+        AccountHandler.removeFunds(account, sumToPay);
         user.setPlan(handler.getNewPlanType());
 
         handler.setDescription("Upgrade plan");

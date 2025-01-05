@@ -1,8 +1,8 @@
 package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.app.input.Commerciant;
+import org.poo.app.input.User;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.logic_handlers.PaymentHandler;
@@ -11,8 +11,6 @@ import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.Card;
 import org.poo.app.user_facilities.Discount;
 import org.poo.utils.Operation;
-
-import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
 
 public class PayOnline extends Operation {
     public PayOnline(final CommandHandler handler, final ArrayNode output) {
@@ -46,8 +44,6 @@ public class PayOnline extends Operation {
         handler.setAmount(DB.convert(handler.getAmount(), handler.getCurrency(),
                 ownerAccount.getCurrency()));
 
-        PaymentHandler.pay(ownerAccount, card, handler);
-
         Commerciant commerciant = DB.getCommerciantByName(handler.getCommerciant());
         if (commerciant == null) {
             return;
@@ -55,17 +51,40 @@ public class PayOnline extends Operation {
 
         double amount = DB.convert(handler.getAmount(), ownerAccount.getCurrency(), "RON");
 
+        if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
+
+            // Update the total amount spent by the account
+            if (ownerAccount.getTotalSpentToCommerciant().containsKey(commerciant)) {
+                double totalSpent = ownerAccount.getTotalSpentToCommerciant().get(commerciant);
+                totalSpent += amount;
+                ownerAccount.getTotalSpentToCommerciant().put(commerciant, totalSpent);
+            } else
+                ownerAccount.getTotalSpentToCommerciant().put(commerciant, amount);
+        }
+
+        double amountBefore = handler.getAmount();
+
+        PaymentHandler.pay(ownerAccount, card, handler);
+
+        // Treat better the case when the payment is not successful
+        if (handler.getAmount() == amountBefore) {
+            return;
+        }
+
         if (commerciant.getCashbackStrategy().equals("nrOfTransactions")) {
-            if (commerciant.getNrOfTransactionsOfUsers().containsKey(ownerAccount)) {
-                int nrOfTransactions = commerciant.getNrOfTransactionsOfUsers().get(ownerAccount);
+
+            // Update the number of transactions for the account
+            if (ownerAccount.getNrOfTransactionsToCommerciant().containsKey(commerciant)) {
+                int nrOfTransactions = ownerAccount.getNrOfTransactionsToCommerciant().get(commerciant);
                 nrOfTransactions++;
-                commerciant.getNrOfTransactionsOfUsers().put(ownerAccount, nrOfTransactions);
+                ownerAccount.getNrOfTransactionsToCommerciant().put(commerciant, nrOfTransactions);
             } else {
-                commerciant.getNrOfTransactionsOfUsers().put(ownerAccount, 1);
+                ownerAccount.getNrOfTransactionsToCommerciant().put(commerciant, 1);
             }
 
-            int nrOfTransactions = commerciant.getNrOfTransactionsOfUsers().get(ownerAccount);
+            int nrOfTransactions = ownerAccount.getNrOfTransactionsToCommerciant().get(commerciant);
 
+            // Add discount if the account has reached a certain number of transactions
             Discount discount = null;
             if (nrOfTransactions == 2)
                 discount = new Discount("Food", 0.02);
@@ -75,15 +94,16 @@ public class PayOnline extends Operation {
                 discount = new Discount("Tech", 0.1);
 
             if (discount != null)
-                ownerAccount.getDiscounts().add(discount);
+                ownerAccount.getCashbacks().add(discount);
+        }
 
-        } else if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
-            if (commerciant.getTotalSpentByUsers().containsKey(ownerAccount)) {
-                double totalSpent = commerciant.getTotalSpentByUsers().get(ownerAccount);
-                totalSpent += amount;
-                commerciant.getTotalSpentByUsers().put(ownerAccount, totalSpent);
-            } else
-                commerciant.getTotalSpentByUsers().put(ownerAccount, amount);
+        if (amount >= 300) {
+            User user = DB.findUserByEmail(ownerAccount.getEmail());
+            user.setNrOfTransactionsOver300RON(user.getNrOfTransactionsOver300RON() + 1);
+
+            if (user.getNrOfTransactionsOver300RON() == 5) {
+                user.setPlan("gold");
+            }
         }
     }
 }

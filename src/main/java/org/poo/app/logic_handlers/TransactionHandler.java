@@ -89,6 +89,17 @@ public abstract class TransactionHandler {
         transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
     }
 
+    public static void addTransactionSplitPaymentCustom(final CommandHandler commandHandler) {
+        Transaction transaction = new Transaction.Builder(commandHandler.getTimestamp(),
+                commandHandler.getDescription())
+                .amountForUsers(commandHandler.getAmountForUsers())
+                .currency(commandHandler.getCurrency())
+                .involvedAccounts(commandHandler.getAccounts())
+                .splitPaymentType(commandHandler.getSplitPaymentType())
+                .build();
+        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
+    }
+
     /**
      * Add a transaction for an error in splitting a payment
      * @param commandHandler current CommandHandler object
@@ -100,6 +111,7 @@ public abstract class TransactionHandler {
                 .currency(commandHandler.getCurrency())
                 .involvedAccounts(commandHandler.getAccounts())
                 .errorMessage(commandHandler.getErrorMessage())
+                .splitPaymentType(commandHandler.getSplitPaymentType())
                 .build();
         transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
     }
@@ -141,6 +153,15 @@ public abstract class TransactionHandler {
         Transaction transaction = new Transaction.Builder(commandHandler.getTimestamp(),
                 commandHandler.getDescription())
                 .amountDouble(commandHandler.getAmount())
+                .build();
+        transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
+    }
+
+    public static void addInterestTransactionToDB(final CommandHandler commandHandler) {
+        Transaction transaction = new Transaction.Builder(commandHandler.getTimestamp(),
+                commandHandler.getDescription())
+                .amountDouble(commandHandler.getAmount())
+                .currency(commandHandler.getCurrency())
                 .build();
         transaction.addTransaction(DB.findAccountByIBAN(commandHandler.getAccount()));
     }

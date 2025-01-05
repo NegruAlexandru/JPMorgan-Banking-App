@@ -51,10 +51,8 @@ public class CashWithdrawal extends Operation {
             return;
         }
 
-        double amount = handler.getAmount();
-        ExchangeRate exchangeRate = DB.getExchangeRate("RON", account.getCurrency());
-        amount *= exchangeRate.getRate();
-        amount = PaymentHandler.getAmountAfterFees(user, amount);
+        double amount = DB.convert(handler.getAmount(), "RON", account.getCurrency());
+        amount = PaymentHandler.getAmountAfterFees(user, account, amount);
 
         if (account.getBalance() < amount) {
             //Insufficient funds
@@ -63,7 +61,7 @@ public class CashWithdrawal extends Operation {
         }
 
         addTransactionToDB("Cash withdrawal of " + handler.getAmount());
-        account.setBalance(account.getBalance() - amount);
+        AccountHandler.removeFunds(account, amount);
     }
 
     public void addTransactionToDB(final String description) {

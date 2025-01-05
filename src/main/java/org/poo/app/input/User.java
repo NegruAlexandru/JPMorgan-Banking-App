@@ -24,6 +24,7 @@ public class User {
     private ArrayList<Transaction> transactions = new ArrayList<>();
     private HashMap<String, String> aliases = new HashMap<>();
     private ArrayList<RequestSP> splitPaymentRequests = new ArrayList<>();
+    private int nrOfTransactionsOver300RON = 0;
 
     public User(final String firstName, final String lastName, final String email, final String birthDate, final String occupation) {
         this.firstName = firstName;

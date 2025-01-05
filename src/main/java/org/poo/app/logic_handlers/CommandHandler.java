@@ -74,15 +74,7 @@ public class CommandHandler {
          * @param output ArrayNode to add the response to
          */
         public void executeCommandAndCreateResponse(final ArrayNode output) {
-            //correct way
-//            CommandFactory.getCommand(this, output).execute();
-
-
-
-            //debug way
-            Command command = CommandFactory.getCommand(this, output);
-            if (command != null)
-                command.execute();
+            CommandFactory.getCommand(this, output).execute();
         }
     }
 

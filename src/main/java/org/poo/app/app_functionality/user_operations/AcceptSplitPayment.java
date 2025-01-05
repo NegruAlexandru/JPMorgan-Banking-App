@@ -24,6 +24,7 @@ public class AcceptSplitPayment extends Operation {
         if (user.getSplitPaymentRequests().isEmpty()) {
             return;
         }
+
         RequestSP request = user.getSplitPaymentRequests().getFirst();
 
         while (request.isCancelled()) {
@@ -34,6 +35,7 @@ public class AcceptSplitPayment extends Operation {
             }
             request = user.getSplitPaymentRequests().getFirst();
         }
+        user.getSplitPaymentRequests().removeFirst();
 
         request.setAccepted(true);
         request.getSplitPayment().checkForSplitPayment(request);
