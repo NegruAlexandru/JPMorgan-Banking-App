@@ -29,13 +29,6 @@ public class CashWithdrawal extends Operation {
 
         Account account = DB.findAccountByCardNumber(handler.getCardNumber());
 
-        // ???
-//        if (account == null) {
-//            //Account not found
-//            addTransaction("Account not found");
-//            return;
-//        }
-
         if (account == null) {
             //Account not found
 
@@ -47,7 +40,8 @@ public class CashWithdrawal extends Operation {
         User user = DB.findUserByEmail(handler.getEmail());
         if (user == null) {
             //User not found
-            addTransactionToDB("User not found");
+//            addTransactionToDB("User not found");
+            addTransactionToOutput("description", "User not found");
             return;
         }
 
@@ -56,11 +50,12 @@ public class CashWithdrawal extends Operation {
 
         if (account.getBalance() < amount) {
             //Insufficient funds
-            addTransactionToDB("Insufficient funds");
+            super.addTransactionToDB("Insufficient funds");
             return;
         }
 
         addTransactionToDB("Cash withdrawal of " + handler.getAmount());
+
         AccountHandler.removeFunds(account, amount);
     }
 

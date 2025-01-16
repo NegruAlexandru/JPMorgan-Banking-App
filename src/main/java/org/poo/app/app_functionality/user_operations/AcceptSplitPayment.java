@@ -16,7 +16,7 @@ public class AcceptSplitPayment extends Operation {
     public void execute() {
         User user = DB.findUserByEmail(handler.getEmail());
         if (user == null) {
-            System.out.println("User not found in AcceptSplitPayment");
+            addTransactionToOutput("description", "User not found");
             return;
         }
 

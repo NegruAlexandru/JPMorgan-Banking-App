@@ -26,6 +26,7 @@ public class ChangeDepositLimit extends Operation {
 
         // check ownership
         if (!businessAccount.getOwner().getEmail().equals(handler.getEmail())) {
+            addTransactionToOutput("description", "You must be owner in order to change deposit limit.");
             return;
         }
 

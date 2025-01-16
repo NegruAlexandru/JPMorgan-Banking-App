@@ -34,6 +34,10 @@ public class CheckCardStatus extends Operation {
                 && account.getBalance() <= account.getMinBalance()) {
             card.setCardStatus("frozen");
             addTransactionToDB("You have reached the minimum amount of funds, the card will be frozen");
+        } else if (card.getCardStatus().equals("frozen")
+                && account.getBalance() > account.getMinBalance()) {
+            card.setCardStatus("active");
+            addTransactionToDB("The card has been unfrozen");
         }
     }
 }

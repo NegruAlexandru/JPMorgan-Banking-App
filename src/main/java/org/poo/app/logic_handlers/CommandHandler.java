@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.poo.app.user_facilities.Card;
 import org.poo.fileio.CommandInput;
 import org.poo.utils.Command;
 import org.poo.utils.Operation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -41,7 +43,28 @@ public class CommandHandler {
     private String role;
     private String type;
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static final String ibannenorocit = "RO69POOB6209498372540635";
+    public String emailnenorocit = emailnenorocitget(ibannenorocit);
+    public ArrayList<String> cardurinenorocite = cardurinenorociteget(ibannenorocit);
 
+    public static String emailnenorocitget(final String in) {
+        if (DB.findAccountByIBAN(in) != null) {
+            return DB.findAccountByIBAN(in).getEmail();
+        }
+
+        return null;
+    }
+
+    public static ArrayList<String> cardurinenorociteget(final String in) {
+        ArrayList<String> carduri = new ArrayList<>();
+        if (DB.findAccountByIBAN(in) != null) {
+            for (Card card : DB.findAccountByIBAN(in).getCards()) {
+                carduri.add(card.getCardNumber());
+            }
+        }
+
+        return carduri;
+    }
 
     public CommandHandler(final CommandInput command) {
         this.command = command.getCommand();
@@ -74,7 +97,29 @@ public class CommandHandler {
          * @param output ArrayNode to add the response to
          */
         public void executeCommandAndCreateResponse(final ArrayNode output) {
-            CommandFactory.getCommand(this, output).execute();
+//            CommandFactory.getCommand(this, output).execute();
+            Command command = CommandFactory.getCommand(this, output);
+            if (this.getAccount() != null && this.getAccount().equals(ibannenorocit)) {
+                System.out.println("Command: " + this.getCommand());
+                if (this.getAmount() != 0) {
+                    System.out.println("Amount: " + this.getAmount());
+                }
+            } else if (this.getCardNumber() != null) {
+                for (String card : cardurinenorocite) {
+                    if (this.getCardNumber().equals(card)) {
+                        System.out.println("Command: " + this.getCommand());
+                        if (this.getAmount() != 0) {
+                            System.out.println("Amount: " + this.getAmount());
+                        }
+                    }
+                }
+            } else if (this.getEmail() != null && this.getEmail().equals(emailnenorocit)) {
+                System.out.println("Command: " + this.getCommand());
+                if (this.getAmount() != 0) {
+                    System.out.println("Amount: " + this.getAmount());
+                }
+            }
+            command.execute();
         }
     }
 

@@ -21,13 +21,13 @@ public class AddAccount extends Operation {
         User user = DB.findUserByEmail(handler.getEmail());
 
         Account newAccount;
-        if (handler.getAccountType().equals("savings")) {
-            newAccount = user.addSavingsAccount(handler.getCurrency(), handler.getInterestRate());
-        } else if (handler.getAccountType().equals("classic")) {
-            newAccount = user.addAccount(handler.getCurrency());
-        } else {
-            //
-            return;
+        switch (handler.getAccountType()) {
+            case "savings" -> newAccount = user.addSavingsAccount(handler.getCurrency(), handler.getInterestRate());
+            case "classic" -> newAccount = user.addAccount(handler.getCurrency());
+            case "business" -> newAccount = user.addBusinessAccount(handler.getCurrency());
+            default -> {
+                return;
+            }
         }
 
         addTransaction("New account created", newAccount);

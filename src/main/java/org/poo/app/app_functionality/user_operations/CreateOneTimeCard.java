@@ -23,7 +23,7 @@ public class CreateOneTimeCard extends Operation {
             return;
         }
 
-        addTransaction("New card created", account.createOneTimeCard());
+        addTransaction("New card created", account.createOneTimeCard(handler.getEmail()));
     }
 
     public void addTransaction(final String description, final String cardNumber) {

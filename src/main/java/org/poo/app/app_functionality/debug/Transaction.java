@@ -36,6 +36,7 @@ public final class Transaction {
     private String accountIBAN;
     private List<Double> amountForUsers;
     private String splitPaymentType;
+    private String command;
 
     private Transaction(final Builder builder) {
         this.timestamp = builder.timestamp;
@@ -59,6 +60,7 @@ public final class Transaction {
         this.accountIBAN = builder.accountIBAN;
         this.amountForUsers = builder.amountForUsers;
         this.splitPaymentType = builder.splitPaymentType;
+        this.command = builder.command;
     }
 
     public static final class Builder {
@@ -83,10 +85,12 @@ public final class Transaction {
         private String accountIBAN;
         private List<Double> amountForUsers;
         private String splitPaymentType;
+        private String command;
 
-        public Builder(final int timestamp, final String description) {
+        public Builder(final int timestamp, final String description, final String command) {
             this.timestamp = timestamp;
             this.description = description;
+            this.command = command;
         }
 
         /**
@@ -265,6 +269,11 @@ public final class Transaction {
 
         public Builder splitPaymentType(final String splitPaymentType) {
             this.splitPaymentType = splitPaymentType;
+            return this;
+        }
+
+        public Builder command(final String command) {
+            this.command = command;
             return this;
         }
 

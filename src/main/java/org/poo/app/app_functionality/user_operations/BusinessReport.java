@@ -12,7 +12,6 @@ import org.poo.utils.Operation;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.TreeMap;
 
 import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
@@ -27,7 +26,7 @@ public class BusinessReport extends Operation {
      */
     @Override
     public void execute() {
-        Account account =DB.findAccountByIBAN(handler.getAccount());
+        Account account = DB.findAccountByIBAN(handler.getAccount());
         if (account == null) {
             // Account not found
             return;
@@ -40,9 +39,9 @@ public class BusinessReport extends Operation {
 
         BusinessAccount businessAccount = (BusinessAccount) account;
         // check ownership
-        if (!businessAccount.getOwner().getEmail().equals(handler.getEmail())) {
-            return;
-        }
+//        if (!businessAccount.getOwner().getEmail().equals(handler.getEmail())) {
+//            return;
+//        }
 
         createReport(businessAccount);
     }
@@ -58,7 +57,6 @@ public class BusinessReport extends Operation {
     public void createTransactionReport(final BusinessAccount account) {
         ObjectNode report = output.addObject();
         report.put("command", handler.getCommand());
-        report.put("timestamp", handler.getTimestamp());
 
         ObjectNode data = OBJECT_MAPPER.createObjectNode();
         data.put("IBAN", account.getIban());
@@ -66,31 +64,88 @@ public class BusinessReport extends Operation {
         data.put("currency", account.getCurrency());
         data.put("spending limit", account.getSpendingLimit());
         data.put("deposit limit", account.getDepositLimit());
+        data.put("statistics type", "transaction");
+
+        LinkedHashMap<User, Double> spending = new LinkedHashMap<>();
+        LinkedHashMap<User, Double> deposited = new LinkedHashMap<>();
+        double totalSpent = 0;
+        double totalDeposited = 0;
+
+        for (Transaction transaction : account.getBusinessTransactions()) {
+            User user = transaction.getBusinessAssociatedUser();
+
+            if (user == account.getOwner()) {
+                continue;
+            }
+
+            if (transaction.getCommand().equals("sendMoney") || transaction.getCommand().equals("payOnline")) {
+                if (spending.containsKey(user)) {
+                    Double spent = spending.get(user);
+                    spent += transaction.getAmountDouble();
+                    spending.put(user, spent);
+                } else {
+                    spending.put(user, transaction.getAmountDouble());
+                }
+                totalSpent += transaction.getAmountDouble();
+            } else if (transaction.getCommand().equals("addFunds")) {
+                if (deposited.containsKey(user)) {
+                    Double deposit = deposited.get(user);
+                    deposit += transaction.getAmountDouble();
+                    deposited.put(user, deposit);
+                } else {
+                    deposited.put(user, transaction.getAmountDouble());
+                }
+                totalDeposited += transaction.getAmountDouble();
+            }
+        }
 
         ArrayNode managers = OBJECT_MAPPER.createArrayNode();
         for (User manager : account.getManagers()) {
+            double spentSum = 0.0;
+            double depositedSum = 0.0;
+
+            if (spending.containsKey(manager)) {
+                spentSum = spending.get(manager);
+            }
+
+            if (deposited.containsKey(manager)) {
+                depositedSum = deposited.get(manager);
+            }
+
             ObjectNode managerNode = OBJECT_MAPPER.createObjectNode();
-            managerNode.put("name",  manager.getLastName() + manager.getFirstName());
-//            managerNode.put("spent", manager.getSpent());
-//            managerNode.put("deposited", manager.getDeposited());
+            managerNode.put("username",  manager.getLastName() + " " + manager.getFirstName());
+            managerNode.put("spent", spentSum);
+            managerNode.put("deposited", depositedSum);
             managers.add(managerNode);
         }
 
         ArrayNode employees = OBJECT_MAPPER.createArrayNode();
         for (User employee : account.getEmployees()) {
+            double spentSum = 0.0;
+            double depositedSum = 0.0;
+
+            if (spending.containsKey(employee)) {
+                spentSum = spending.get(employee);
+            }
+
+            if (deposited.containsKey(employee)) {
+                depositedSum = deposited.get(employee);
+            }
+
             ObjectNode employeeNode = OBJECT_MAPPER.createObjectNode();
-            employeeNode.put("name",  employee.getLastName() + employee.getFirstName());
-//            employeeNode.put("spent", employee.getSpent());
-//            employeeNode.put("deposited", employee.getDeposited());
+            employeeNode.put("username", employee.getLastName() + " " + employee.getFirstName());
+            employeeNode.put("spent", spentSum);
+            employeeNode.put("deposited", depositedSum);
             employees.add(employeeNode);
         }
 
         data.set("managers", managers);
         data.set("employees", employees);
-        // data.set("total spent", account.getTotalSpent());
-        // data.set("total deposited", account.getTotalDeposited());
+        data.put("total spent", totalSpent);
+        data.put("total deposited", totalDeposited);
 
         report.set("output", data);
+        report.put("timestamp", handler.getTimestamp());
     }
 
     public void createCommerciantReport(final BusinessAccount account) {
@@ -105,14 +160,22 @@ public class BusinessReport extends Operation {
         data.put("spending limit", account.getSpendingLimit());
         data.put("deposit limit", account.getDepositLimit());
 
-        LinkedHashMap <String, HashMap<User, Double>> commerciantSpending = new LinkedHashMap<>();
+        TreeMap<String, HashMap<User, Double>> commerciantSpending = new TreeMap<>();
 
         for (Transaction t : account.getBusinessTransactions()) {
+            if (t.getCommerciant() == null) {
+                continue;
+            }
+
+            if (t.getBusinessAssociatedUser() == account.getOwner()) {
+                continue;
+            }
+
             if (commerciantSpending.containsKey(t.getCommerciant())) {
                 HashMap<User, Double> employees = commerciantSpending.get(t.getCommerciant());
                 User user = t.getBusinessAssociatedUser();
                 if (employees.containsKey(user)) {
-                    Double spent = employees.get(user);
+                    double spent = employees.get(user);
                     spent += t.getAmountDouble();
                     employees.put(user, spent);
                 } else {
@@ -121,8 +184,9 @@ public class BusinessReport extends Operation {
 
             } else {
                 User user = t.getBusinessAssociatedUser();
-                commerciantSpending.put(t.getCommerciant(), new HashMap<>());
-                commerciantSpending.get(t.getCommerciant()).put(user, t.getAmountDouble());
+                commerciantSpending.put(t.getCommerciant(), new HashMap<>() {{
+                    put(user, t.getAmountDouble());
+                }});
             }
         }
 
@@ -135,23 +199,27 @@ public class BusinessReport extends Operation {
             ArrayNode managersArray = OBJECT_MAPPER.createArrayNode();
             commerciant.put("commerciant", keyCommerciant);
 
-            double totalSpent = 0;
+            double totalReceived = 0;
 
             for (User keyUser : employees.keySet()) {
-                String name = keyUser.getLastName() + keyUser.getFirstName();
+                String name = keyUser.getLastName() + " " + keyUser.getFirstName();
                 if (account.getEmployees().contains(keyUser)) {
                     employeesArray.add(name);
                 } else {
                     managersArray.add(name);
                 }
-                totalSpent += employees.get(keyUser);
+                totalReceived += employees.get(keyUser);
             }
-            commerciant.put("totalSpent", totalSpent);
+            commerciant.put("total received", totalReceived);
             commerciant.set("employees", employeesArray);
             commerciant.set("managers", managersArray);
 
             commerciants.add(commerciant);
         }
+
+        data.set("commerciants", commerciants);
+        data.put("statistics type", "commerciant");
+        report.set("output", data);
     }
 
     public void createReportHeader() {

@@ -41,8 +41,8 @@ public class Account implements AccountInterface {
      * Create a card for the account
      * @return the card number
      */
-    public String createCard() {
-        Card card = new Card(this.getCurrency(), this.getIban());
+    public String createCard(final String email) {
+        Card card = new Card(this.getCurrency(), this.getIban(), email);
         this.getCards().add(card);
         DB.getAccountsWithCardNumber().put(card.getCardNumber(), this);
         return card.getCardNumber();
@@ -52,8 +52,8 @@ public class Account implements AccountInterface {
      * Create a one-time card for the account
      * @return the card number
      */
-    public String createOneTimeCard() {
-        Card card = new OneTimeCard(this.getCurrency(), this.getIban());
+    public String createOneTimeCard(final String email) {
+        Card card = new OneTimeCard(this.getCurrency(), this.getIban(), email);
         this.getCards().add(card);
         DB.addAccountWithCardNumber(this, card.getCardNumber());
         return card.getCardNumber();

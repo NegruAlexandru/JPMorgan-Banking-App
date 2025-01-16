@@ -15,16 +15,17 @@ public class Card implements CardInterface {
     private String cardStatus;
     private String iban;
     private String type;
+    private String emailOfCreator;
 
-    public Card(final String currency, final String iban) {
+    public Card(final String currency, final String iban, final String email) {
         this.cardNumber = Utils.generateCardNumber();
         this.currency = currency;
         this.iban = iban;
         this.cardStatus = "active";
         this.type = "classic";
+        this.emailOfCreator = email;
     }
 
-    /**
      /**
      * Visitor pattern accept method
      * @param visitor CardVisitor object

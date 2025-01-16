@@ -1,12 +1,10 @@
 package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.input.ExchangeRate;
 import org.poo.app.logic_handlers.AccountHandler;
 import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.input.User;
-import org.poo.app.logic_handlers.PaymentHandler;
 import org.poo.app.user_facilities.Account;
 import org.poo.utils.Operation;
 
@@ -24,14 +22,8 @@ public class UpgradePlan extends Operation {
     public void execute() {
         Account account = DB.findAccountByIBAN(handler.getAccount());
 
-        // ???
-//        if (account == null) {
-//            //Account not found
-//            addTransaction("Account not found");
-//            return;
-//        }
-
         if (account == null) {
+            addTransactionToOutput("description", "Account not found");
             return;
         }
 

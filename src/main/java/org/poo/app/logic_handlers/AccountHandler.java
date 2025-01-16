@@ -9,6 +9,8 @@ import org.poo.app.user_facilities.*;
 import org.poo.utils.AccountVisitor;
 import org.poo.utils.CardVisitor;
 
+import static org.poo.app.logic_handlers.CommandHandler.ibannenorocit;
+
 public class AccountHandler implements AccountVisitor, CardVisitor {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -18,9 +20,25 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void addFunds(final Account account, final double amount) {
-        account.setBalance(Math.round((account.getBalance() + amount) * 100.0) / 100.0);
-//        System.out.println(account.getBalance());
-//        account.setBalance(account.getBalance() + amount);
+//        account.setBalance(Math.round((account.getBalance() + amount) * 100.0) / 100.0);
+//        if (account.getType().equals("business")) {
+//            System.out.println(account.getBalance());
+//        }
+        if (account.getIban().equals(ibannenorocit)) {
+            System.out.println(account.getBalance());
+            Account acc = DB.findAccountByIBAN(account.getIban());
+            User user = DB.findUserByEmail(acc.getEmail());
+            System.out.println(user.getPlan());
+        }
+
+        account.setBalance(account.getBalance() + amount);
+        if (account.getIban().equals(ibannenorocit)) {
+            System.out.println(account.getBalance());
+        }
+//        if (account.getType().equals("business")) {
+//            System.out.println(account.getBalance());
+//        }
+//        System.out.println();
     }
 
     /**
@@ -29,9 +47,25 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void removeFunds(final Account account, final double amount) {
-        account.setBalance(Math.round((account.getBalance() - amount) * 100.0) / 100.0);
-//        System.out.println(account.getBalance());
-//        account.setBalance(account.getBalance() - amount);
+//        account.setBalance(Math.round((account.getBalance() - amount) * 100.0) / 100.0);
+//        if (account.getType().equals("business")) {
+//            System.out.println(account.getBalance());
+//        }
+
+        if (account.getIban().equals(ibannenorocit)) {
+            System.out.println(account.getBalance());
+            Account acc = DB.findAccountByIBAN(account.getIban());
+            User user = DB.findUserByEmail(acc.getEmail());
+            System.out.println(user.getPlan());
+        }
+        account.setBalance(account.getBalance() - amount);
+        if (account.getIban().equals(ibannenorocit)) {
+            System.out.println(account.getBalance());
+        }
+//        if (account.getType().equals("business")) {
+//            System.out.println(account.getBalance());
+//        }
+//        System.out.println();
     }
 
     /**
@@ -47,7 +81,12 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
         User user = DB.findUserByEmail(sender.getEmail());
         double amountAndFees = PaymentHandler.getAmountAfterFees(user, sender, amount);
 
+//        System.out.println(sender.getBalance());
+//        User receiverUser = DB.findUserByEmail(receiver.getEmail());
+//        System.out.println(receiverUser.getPlan());
         removeFunds(sender, amountAndFees);
+//        System.out.println(sender.getBalance());
+//        System.out.println("...");
 
         amount = DB.convert(amount, sender.getCurrency(), receiver.getCurrency());
 
@@ -102,7 +141,7 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
         accountNode.put("IBAN", account.getIban());
         accountNode.put("balance", account.getBalance());
         accountNode.put("currency", account.getCurrency());
-        accountNode.put("type", "classic");
+        accountNode.put("type", account.getType());
         accountNode.set("cards", cardsNode);
         return accountNode;
     }
@@ -124,7 +163,24 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
         accountNode.put("IBAN", account.getIban());
         accountNode.put("balance", account.getBalance());
         accountNode.put("currency", account.getCurrency());
-        accountNode.put("type", "savings");
+        accountNode.put("type", account.getType());
+        accountNode.set("cards", cardsNode);
+        return accountNode;
+    }
+
+    @Override
+    public ObjectNode visit(final BusinessAccount account) {
+        ObjectNode accountNode = OBJECT_MAPPER.createObjectNode();
+
+        ArrayNode cardsNode = OBJECT_MAPPER.createArrayNode();
+        for (Card c : account.getCards()) {
+            cardsNode.add(c.accept(this));
+        }
+
+        accountNode.put("IBAN", account.getIban());
+        accountNode.put("balance", account.getBalance());
+        accountNode.put("currency", account.getCurrency());
+        accountNode.put("type", account.getType());
         accountNode.set("cards", cardsNode);
         return accountNode;
     }

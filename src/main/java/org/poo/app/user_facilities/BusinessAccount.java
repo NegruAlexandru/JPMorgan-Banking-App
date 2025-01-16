@@ -11,7 +11,6 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class BusinessAccount extends Account {
-    private User owner;
     private ArrayList<User> managers;
     private ArrayList<User> employees;
     private double spendingLimit;
@@ -21,8 +20,14 @@ public class BusinessAccount extends Account {
     public BusinessAccount(final String email, final String currency) {
         super(email, currency);
         this.setType("business");
-        this.owner = DB.findUserByEmail(email);
         this.managers = new ArrayList<>();
         this.employees = new ArrayList<>();
+        this.spendingLimit = DB.convert(500, "RON", currency);
+        this.depositLimit = DB.convert(500, "RON", currency);
+        this.businessTransactions = new ArrayList<>();
+    }
+
+    public User getOwner() {
+        return DB.findUserByEmail(getEmail());
     }
 }

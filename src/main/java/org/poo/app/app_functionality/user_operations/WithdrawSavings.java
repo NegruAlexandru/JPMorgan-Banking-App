@@ -63,15 +63,18 @@ public class WithdrawSavings extends Operation {
             return;
         }
 
-        ExchangeRate exchangeRate = DB.getExchangeRate(account.getCurrency(), handler.getCurrency());
+        double amount = DB.convert(handler.getAmount(), handler.getCurrency(), account.getCurrency());
+//        amount = PaymentHandler.getAmountAfterFees(user, account, amount);
 
-        if (account.getBalance() < handler.getAmount() * exchangeRate.getRate()) {
+        if (account.getBalance() < amount) {
             //Insufficient funds
             addTransactionToDB("Insufficient funds");
             return;
         }
 
-        AccountHandler.transferFunds(account, account1, handler.getAmount());
+//        AccountHandler.transferFunds(account, account1, handler.getAmount());
+        AccountHandler.addFunds(account1, handler.getAmount());
+        AccountHandler.removeFunds(account, amount);
         addTransaction("Savings withdrawal", account, account1);
     }
 

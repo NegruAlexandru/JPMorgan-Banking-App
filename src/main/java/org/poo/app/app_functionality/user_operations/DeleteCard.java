@@ -5,6 +5,8 @@ import org.poo.app.logic_handlers.CommandHandler;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.user_facilities.Account;
+import org.poo.app.user_facilities.BusinessAccount;
+import org.poo.app.user_facilities.Card;
 import org.poo.utils.Operation;
 
 public class DeleteCard extends Operation {
@@ -21,6 +23,23 @@ public class DeleteCard extends Operation {
 
         if (account == null) {
             return;
+        }
+
+        if (account.getType().equals("business")) {
+            BusinessAccount businessAccount = (BusinessAccount) account;
+            if (businessAccount.getEmployees().contains(DB.findUserByEmail(handler.getEmail()))) {
+                Card card = DB.getCardByCardNumber(handler.getCardNumber());
+
+                if (card == null)
+                    return;
+
+                if (card.getEmailOfCreator().equals(handler.getEmail())) {
+                    addTransaction("The card has been destroyed", account);
+                    account.deleteCard(handler.getCardNumber());
+                }
+
+                return;
+            }
         }
 
         addTransaction("The card has been destroyed", account);

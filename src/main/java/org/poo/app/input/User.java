@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.poo.app.app_functionality.debug.Transaction;
 import org.poo.app.logic_handlers.DB;
 import org.poo.app.user_facilities.Account;
+import org.poo.app.user_facilities.BusinessAccount;
 import org.poo.app.user_facilities.SavingsAccount;
 import org.poo.fileio.UserInput;
 import org.poo.utils.RequestSP;
@@ -73,6 +74,14 @@ public class User {
      */
     public Account addSavingsAccount(final String currency, final double interestRate) {
         Account account = new SavingsAccount(email, currency, interestRate);
+        this.accounts.add(account);
+        DB.addAccount(account);
+
+        return account;
+    }
+
+    public Account addBusinessAccount(final String currency) {
+        Account account = new BusinessAccount(email, currency);
         this.accounts.add(account);
         DB.addAccount(account);
 

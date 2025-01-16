@@ -23,11 +23,7 @@ public class CreateCard extends Operation {
             return;
         }
 
-        if (!account.getEmail().equals(handler.getEmail())) {
-            return;
-        }
-
-        addTransaction("New card created", account.createCard());
+        addTransaction("New card created", account.createCard(handler.getEmail()));
     }
 
     public void addTransaction(final String description, final String cardNumber) {

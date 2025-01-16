@@ -28,6 +28,8 @@ public abstract class DB {
     private static HashMap<String, Account> accountsWithIBAN = new HashMap<>();
     @Getter
     private static HashMap<String, Account> accountsWithCardNumber = new HashMap<>();
+    @Getter
+    private static ArrayList<String> commerciantAccounts = new ArrayList<>();
 
     /**
      * Add the derived exchange rate to the list if it is not already present
@@ -158,6 +160,7 @@ public abstract class DB {
      */
     public static void addCommerciant(final Commerciant commerciant) {
         commerciants.add(commerciant);
+        commerciantAccounts.add(commerciant.getAccount());
     }
 
     /**
