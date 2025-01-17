@@ -8,6 +8,8 @@ import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.Card;
 import org.poo.app.user_facilities.Discount;
 
+import static org.poo.app.logic_handlers.CommandHandler.ibannenorocit;
+
 public abstract class PaymentHandler {
     /**
      * Process a payment using the account and card
@@ -28,13 +30,17 @@ public abstract class PaymentHandler {
 
         if (balance - amountAfterFees < 0) {
             commandHandler.setDescription("Insufficient funds");
-            System.out.println("Insufficient funds");
+            if (ownerAccount.getIban().equals(ibannenorocit)) {
+                System.out.println("Insufficient funds");
+            }
             TransactionHandler.addTransactionDescriptionTimestamp(commandHandler);
 
             return false;
         } else if (balance - ownerAccount.getMinBalance() - amountAfterFees <= 0) {
             commandHandler.setDescription("The card is frozen");
-            System.out.println("The card is frozen");
+            if (ownerAccount.getIban().equals(ibannenorocit)) {
+                System.out.println("The card is frozen");
+            }
             card.setCardStatus("frozen");
             TransactionHandler.addTransactionDescriptionTimestamp(commandHandler);
 
@@ -45,7 +51,9 @@ public abstract class PaymentHandler {
             double cashback = PaymentHandler.getCashbackAmount(user, ownerAccount, amount, DB.getCommerciantByName(commandHandler.getCommerciant()));
 //            System.out.println("cashback " + cashback);
             AccountHandler.addFunds(ownerAccount, cashback);
-            System.out.println("Payment successful");
+            if (ownerAccount.getIban().equals(ibannenorocit)) {
+                System.out.println("Payment successful");
+            }
 
             commandHandler.setDescription("Card payment");
             TransactionHandler.addTransactionPayOnline(commandHandler);
@@ -76,22 +84,32 @@ public abstract class PaymentHandler {
         return amount;
     }
 
-    public static double getCashbackAmount(final User user, final Account account , final double amount, final Commerciant commerciant) {
+    public static double getCashbackAmount(final User user, final Account account, final double amount, final Commerciant commerciant) {
         double cashback = 0;
 
         String commerciantType = commerciant.getType();
         for (Discount discount : account.getCashbacks()) {
             if (discount.getCategory().equals(commerciantType)) {
-                cashback = discount.getValue();
-//                System.out.println("discount " + discount.getValue() + " " + discount.getCategory());
-                account.getCashbacks().remove(discount);
-                break;
+                if (!discount.isUsed()) {
+                    cashback = discount.getValue();
+                    if (account.getIban().equals(ibannenorocit)) {
+                        System.out.println("discount " + discount.getValue() + " " + discount.getCategory());
+                    }
+    //                account.getCashbacks().remove(discount);
+                    discount.setUsed(true);
+                    break;
+                }
             }
         }
 
+        if (account.getIban().equals(ibannenorocit)) {
+            System.out.println("commerciant type " + commerciantType + " commerciant cashback strategy " + commerciant.getCashbackStrategy());
+        }
+
         if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
-            account.getTotalSpentToCommerciant().putIfAbsent(commerciant, 0.0);
-            double totalSpent = account.getTotalSpentToCommerciant().get(commerciant);
+//            account.getTotalSpentToCommerciant().putIfAbsent(commerciant, 0.0);
+//            double totalSpent = account.getTotalSpentToCommerciant().get(commerciant);
+            double totalSpent = account.getTotalSpent();
             if (100 <= totalSpent && totalSpent < 300) {
                 cashback += switch (user.getPlan()) {
                     case "standard", "student" -> 0.001;
@@ -121,7 +139,9 @@ public abstract class PaymentHandler {
 //        System.out.println("Amount: " + amount);
 //        System.out.println("Amount after fees and cashback: " + amount * (1 - cashback + fees));
 
-//        System.out.println("cashback per cent " + cashback);
+        if (account.getIban().equals(ibannenorocit)) {
+            System.out.println("cashback " + cashback);
+        }
         return amount * cashback;
     }
 }

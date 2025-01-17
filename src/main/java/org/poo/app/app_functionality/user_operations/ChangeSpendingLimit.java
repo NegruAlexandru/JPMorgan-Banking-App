@@ -18,7 +18,12 @@ public class ChangeSpendingLimit extends Operation {
     @Override
     public void execute() {
         Account account = DB.findAccountByIBAN(handler.getAccount());
-        if (account == null || !account.getType().equals("business")) {
+        if (account == null) {
+            return;
+        }
+
+        if (!account.getType().equals("business")) {
+            addTransactionToOutput("description", "This is not a business account");
             return;
         }
 

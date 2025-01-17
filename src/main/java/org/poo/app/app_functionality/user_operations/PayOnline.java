@@ -28,19 +28,19 @@ public class PayOnline extends Operation {
 
         if (card == null) {
             addTransactionToOutput("description", "Card not found");
-            System.out.println("Card not found");
+//            System.out.println("Card not found");
             return;
         }
 
         if (handler.getAmount() <= 0) {
-            System.out.println("Invalid amount");
+//            System.out.println("Invalid amount");
             return;
         }
 
         Account ownerAccount = DB.findAccountByCardNumber(handler.getCardNumber());
 
         if (ownerAccount == null) {
-            System.out.println("Account not found");
+//            System.out.println("Account not found");
             return;
         }
 
@@ -49,7 +49,9 @@ public class PayOnline extends Operation {
 
         if (card.getCardStatus().equals("frozen")) {
             handler.setDescription("The card is frozen");
-            System.out.println("The card is frozen");
+            if (ownerAccount.getIban().equals(ibannenorocit)) {
+                System.out.println("The card is frozen");
+            }
             handler.setAccount(ownerAccount.getIban());
             TransactionHandler.addTransactionDescriptionTimestamp(handler);
             return;
@@ -63,7 +65,9 @@ public class PayOnline extends Operation {
                 && !businessAccount.getManagers().contains(DB.findUserByEmail(handler.getEmail()))
                 && !businessAccount.getOwner().equals(DB.findUserByEmail(handler.getEmail()))) {
                 addTransactionToOutput("description", "Card not found");
-                System.out.println("Card not found1");
+                if (ownerAccount.getIban().equals(ibannenorocit)) {
+                    System.out.println("Card not found1");
+                }
                 return;
             }
 
@@ -73,7 +77,9 @@ public class PayOnline extends Operation {
             if (!businessAccount.getOwner().equals(DB.findUserByEmail(handler.getEmail()))) {
                 if (amount > businessAccount.getSpendingLimit()) {
 //                addTransactionToOutput("description", "Spending limit exceeded");
-                    System.out.println("Spending limit exceeded");
+                    if (ownerAccount.getIban().equals(ibannenorocit)) {
+                        System.out.println("Spending limit exceeded");
+                    }
                     return;
                 }
             }
@@ -83,7 +89,9 @@ public class PayOnline extends Operation {
 
         Commerciant commerciant = DB.getCommerciantByName(handler.getCommerciant());
         if (commerciant == null) {
-            System.out.println("Commerciant not found");
+            if (ownerAccount.getIban().equals(ibannenorocit)) {
+                System.out.println("Commerciant not found");
+            }
             return;
         }
 
@@ -92,12 +100,15 @@ public class PayOnline extends Operation {
         if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
 
             // Update the total amount spent by the account
-            if (ownerAccount.getTotalSpentToCommerciant().containsKey(commerciant)) {
-                double totalSpent = ownerAccount.getTotalSpentToCommerciant().get(commerciant);
-                totalSpent += amount;
-                ownerAccount.getTotalSpentToCommerciant().put(commerciant, totalSpent);
-            } else
-                ownerAccount.getTotalSpentToCommerciant().put(commerciant, amount);
+//            if (ownerAccount.getTotalSpentToCommerciant().containsKey(commerciant)) {
+//                double totalSpent = ownerAccount.getTotalSpentToCommerciant().get(commerciant);
+//                totalSpent += amount;
+//                ownerAccount.getTotalSpentToCommerciant().put(commerciant, totalSpent);
+//            } else
+//                ownerAccount.getTotalSpentToCommerciant().put(commerciant, amount);
+            double totalSpent = ownerAccount.getTotalSpent();
+            totalSpent += amount;
+            ownerAccount.setTotalSpent(totalSpent);
         }
 
         if (PaymentHandler.pay(ownerAccount, card, handler)) {
@@ -126,11 +137,14 @@ public class PayOnline extends Operation {
             if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
 
                 // Update the total amount spent by the account, change it back
-                if (ownerAccount.getTotalSpentToCommerciant().containsKey(commerciant)) {
-                    double totalSpent = ownerAccount.getTotalSpentToCommerciant().get(commerciant);
-                    totalSpent -= amount;
-                    ownerAccount.getTotalSpentToCommerciant().put(commerciant, totalSpent);
-                }
+//                if (ownerAccount.getTotalSpentToCommerciant().containsKey(commerciant)) {
+//                    double totalSpent = ownerAccount.getTotalSpentToCommerciant().get(commerciant);
+//                    totalSpent -= amount;
+//                    ownerAccount.getTotalSpentToCommerciant().put(commerciant, totalSpent);
+//                }
+                double totalSpent = ownerAccount.getTotalSpent();
+                totalSpent -= amount;
+                ownerAccount.setTotalSpent(totalSpent);
             }
 
             return;
@@ -148,18 +162,47 @@ public class PayOnline extends Operation {
             }
 
             int nrOfTransactions = ownerAccount.getNrOfTransactionsToCommerciant().get(commerciant);
+//            int nrOfTransactions = ownerAccount.getNrOfTransactions();
+//            nrOfTransactions++;
+//            ownerAccount.setNrOfTransactions(nrOfTransactions);
 
             // Add discount if the account has reached a certain number of transactions
-            Discount discount = null;
-            if (nrOfTransactions == 2)
-                discount = new Discount("Food", 0.02);
-            else if (nrOfTransactions == 5)
-                discount = new Discount("Clothes", 0.05);
-            else if (nrOfTransactions == 10)
-                discount = new Discount("Tech", 0.1);
+            if (nrOfTransactions == 2) {
+                boolean found = false;
+                for (Discount d : ownerAccount.getCashbacks()) {
+                    if (d.getCategory().equals("Food")) {
+                        found = true;
+                        break;
+                    }
+                }
 
-            if (discount != null)
-                ownerAccount.getCashbacks().add(discount);
+                if (!found)
+                    ownerAccount.getCashbacks().add(new Discount("Food", 0.02));
+            }
+            else if (nrOfTransactions == 5) {
+                boolean found = false;
+                for (Discount d : ownerAccount.getCashbacks()) {
+                    if (d.getCategory().equals("Clothes")) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                    ownerAccount.getCashbacks().add(new Discount("Clothes", 0.05));
+            }
+            else if (nrOfTransactions == 10) {
+                boolean found = false;
+                for (Discount d : ownerAccount.getCashbacks()) {
+                    if (d.getCategory().equals("Tech")) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                    ownerAccount.getCashbacks().add(new Discount("Tech", 0.1));
+            }
         }
     }
 }

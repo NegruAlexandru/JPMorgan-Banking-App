@@ -7,6 +7,8 @@ import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.user_facilities.Account;
 import org.poo.utils.Operation;
 
+import static org.poo.app.logic_handlers.CommandHandler.ibannenorocit;
+
 public class CreateCard extends Operation {
     public CreateCard(final CommandHandler handler, final ArrayNode output) {
         super(handler, output);
@@ -24,6 +26,9 @@ public class CreateCard extends Operation {
         }
 
         addTransaction("New card created", account.createCard(handler.getEmail()));
+        if (account.getIban().equals(ibannenorocit)) {
+            System.out.println("card number: " + handler.getCardNumber());
+        }
     }
 
     public void addTransaction(final String description, final String cardNumber) {

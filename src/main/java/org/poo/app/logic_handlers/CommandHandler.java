@@ -43,7 +43,7 @@ public class CommandHandler {
     private String role;
     private String type;
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    public static final String ibannenorocit = "RO69POOB6209498372540635";
+    public static final String ibannenorocit = "RO33POOB4049920806186500";
     public String emailnenorocit = emailnenorocitget(ibannenorocit);
     public ArrayList<String> cardurinenorocite = cardurinenorociteget(ibannenorocit);
 
@@ -100,25 +100,40 @@ public class CommandHandler {
 //            CommandFactory.getCommand(this, output).execute();
             Command command = CommandFactory.getCommand(this, output);
             if (this.getAccount() != null && this.getAccount().equals(ibannenorocit)) {
+                System.out.println();
                 System.out.println("Command: " + this.getCommand());
+                System.out.println("timestamp: " + this.getTimestamp());
                 if (this.getAmount() != 0) {
                     System.out.println("Amount: " + this.getAmount());
+                    System.out.println("Currency: " + this.getCurrency());
+                    System.out.println("Card:" + this.getCardNumber());
                 }
             } else if (this.getCardNumber() != null) {
+                System.out.println();
                 for (String card : cardurinenorocite) {
                     if (this.getCardNumber().equals(card)) {
                         System.out.println("Command: " + this.getCommand());
+                        System.out.println("timestamp: " + this.getTimestamp());
                         if (this.getAmount() != 0) {
                             System.out.println("Amount: " + this.getAmount());
+                            System.out.println("Currency: " + this.getCurrency());
+                            System.out.println("Card:" + this.getCardNumber());
+
                         }
                     }
                 }
             } else if (this.getEmail() != null && this.getEmail().equals(emailnenorocit)) {
+                System.out.println();
                 System.out.println("Command: " + this.getCommand());
+                System.out.println("timestamp: " + this.getTimestamp());
                 if (this.getAmount() != 0) {
                     System.out.println("Amount: " + this.getAmount());
+                    System.out.println("Currency: " + this.getCurrency());
+                    System.out.println("Card:" + this.getCardNumber());
+
                 }
             }
+
             command.execute();
         }
     }

@@ -8,6 +8,7 @@ import lombok.Setter;
 public class Discount {
     private final String category;
     private final double value;
+    private boolean used = false;
 
     public Discount(final String category, final double value) {
         this.category = category;

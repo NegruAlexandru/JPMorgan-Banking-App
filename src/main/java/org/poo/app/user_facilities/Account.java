@@ -26,7 +26,9 @@ public class Account implements AccountInterface {
     private ArrayList<Transaction> transactions = new ArrayList<>();
     private ArrayList<Discount> cashbacks = new ArrayList<>();
     private LinkedHashMap<Commerciant, Integer> nrOfTransactionsToCommerciant = new LinkedHashMap<>();
-    private LinkedHashMap<Commerciant, Double> totalSpentToCommerciant = new LinkedHashMap<>();
+//    private LinkedHashMap<Commerciant, Double> totalSpentToCommerciant = new LinkedHashMap<>();
+    private int nrOfTransactions;
+    private double totalSpent;
 
     public Account(final String email, final String currency) {
         this.email = email;
@@ -35,6 +37,8 @@ public class Account implements AccountInterface {
         this.minBalance = 0;
         this.balance = 0;
         this.type = "classic";
+//        this.nrOfTransactions = 0;
+        this.totalSpent = 0;
     }
 
     /**

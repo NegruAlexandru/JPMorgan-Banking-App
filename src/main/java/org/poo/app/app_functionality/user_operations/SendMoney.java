@@ -64,12 +64,15 @@ public class SendMoney extends Operation {
 
                 if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
                     // Update the total amount spent by the account
-                    if (senderAccount.getTotalSpentToCommerciant().containsKey(commerciant)) {
-                        double totalSpent = senderAccount.getTotalSpentToCommerciant().get(commerciant);
-                        totalSpent += amountSent;
-                        senderAccount.getTotalSpentToCommerciant().put(commerciant, totalSpent);
-                    } else
-                        senderAccount.getTotalSpentToCommerciant().put(commerciant, amountSent);
+//                    if (senderAccount.getTotalSpentToCommerciant().containsKey(commerciant)) {
+//                        double totalSpent = senderAccount.getTotalSpentToCommerciant().get(commerciant);
+//                        totalSpent += amountSent;
+//                        senderAccount.getTotalSpentToCommerciant().put(commerciant, totalSpent);
+//                    } else
+//                        senderAccount.getTotalSpentToCommerciant().put(commerciant, amountSent);
+                    double totalSpent = senderAccount.getTotalSpent();
+                    totalSpent += amountSent;
+                    senderAccount.setTotalSpent(totalSpent);
                 } else if (commerciant.getCashbackStrategy().equals("nrOfTransactions")) {
 
                     // Update the number of transactions for the account
@@ -82,18 +85,47 @@ public class SendMoney extends Operation {
                     }
 
                     int nrOfTransactions = senderAccount.getNrOfTransactionsToCommerciant().get(commerciant);
+//                    int nrOfTransactions = senderAccount.getNrOfTransactions();
+//                    nrOfTransactions++;
+//                    senderAccount.setNrOfTransactions(nrOfTransactions);
 
                     // Add discount if the account has reached a certain number of transactions
-                    Discount discount = null;
-                    if (nrOfTransactions == 2)
-                        discount = new Discount("Food", 0.02);
-                    else if (nrOfTransactions == 5)
-                        discount = new Discount("Clothes", 0.05);
-                    else if (nrOfTransactions == 10)
-                        discount = new Discount("Tech", 0.1);
+                    if (nrOfTransactions == 2) {
+                        boolean found = false;
+                        for (Discount d : senderAccount.getCashbacks()) {
+                            if (d.getCategory().equals("Food")) {
+                                found = true;
+                                break;
+                            }
+                        }
 
-                    if (discount != null)
-                        senderAccount.getCashbacks().add(discount);
+                        if (!found)
+                            senderAccount.getCashbacks().add(new Discount("Food", 0.02));
+                    }
+                    else if (nrOfTransactions == 5) {
+                        boolean found = false;
+                        for (Discount d : senderAccount.getCashbacks()) {
+                            if (d.getCategory().equals("Clothes")) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found)
+                            senderAccount.getCashbacks().add(new Discount("Clothes", 0.05));
+                    }
+                    else if (nrOfTransactions == 10) {
+                        boolean found = false;
+                        for (Discount d : senderAccount.getCashbacks()) {
+                            if (d.getCategory().equals("Tech")) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found)
+                            senderAccount.getCashbacks().add(new Discount("Tech", 0.1));
+                    }
                 }
 
                 if (senderAccount.getType().equals("business")) {

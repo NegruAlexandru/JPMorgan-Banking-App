@@ -9,6 +9,8 @@ import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.BusinessAccount;
 import org.poo.utils.Operation;
 
+import static org.poo.app.logic_handlers.CommandHandler.ibannenorocit;
+
 public class AddFunds extends Operation {
     public AddFunds(CommandHandler handler, ArrayNode output) {
         super(handler, output);
@@ -22,7 +24,9 @@ public class AddFunds extends Operation {
         Account account = DB.findAccountByIBAN(handler.getAccount());
 
         if (account == null) {
-            System.out.println("Account not found addfunds");
+            if (account.getIban().equals(ibannenorocit)) {
+                System.out.println("Account not found addfunds");
+            }
             return;
         }
 
@@ -30,21 +34,33 @@ public class AddFunds extends Operation {
             BusinessAccount businessAccount = (BusinessAccount) account;
 
             if (!businessAccount.getManagers().contains(DB.findUserByEmail(handler.getEmail()))
-                && !businessAccount.getOwner().equals(DB.findUserByEmail(handler.getEmail()))) {
-                System.out.println("You are not allowed to deposit funds into this account");
+                && !businessAccount.getOwner().equals(DB.findUserByEmail(handler.getEmail()))
+                && !businessAccount.getEmployees().contains(DB.findUserByEmail(handler.getEmail()))
+                ) {
+                if (account.getIban().equals(ibannenorocit)) {
+                    System.out.println("You are not allowed to deposit funds into this account");
+                }
                 return;
             }
             if (!businessAccount.getManagers().contains(DB.findUserByEmail(handler.getEmail()))
                     && !businessAccount.getOwner().equals(DB.findUserByEmail(handler.getEmail()))) {
-                if (handler.getAmount() < businessAccount.getDepositLimit()) {
-                    System.out.println("Amount is less than the spending limit");
+                if (account.getIban().equals(ibannenorocit)) {
+                    System.out.println("amount" + handler.getAmount() + " " + businessAccount.getDepositLimit());
+                }
+                if (handler.getAmount() > businessAccount.getDepositLimit()) {
+                    if (account.getIban().equals(ibannenorocit)) {
+                        System.out.println("Amount is less than the deposit limit");
+                    }
                     return;
                 }
             }
         }
 
         AccountHandler.addFunds(account, handler.getAmount());
-        System.out.println("Funds added successfully");
+        if (account.getIban().equals(ibannenorocit)) {
+            System.out.println("Funds added successfully");
+        }
+
 
         if (account.getType().equals("business")) {
             handler.setAccount(account.getIban());
