@@ -1,19 +1,20 @@
 package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.input.*;
+import org.poo.app.baseClasses.User;
+import org.poo.app.baseClasses.Commerciant;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
-import org.poo.app.logicHandlers.PaymentHandler;
+import org.poo.app.payment.PaymentHandler;
 import org.poo.app.logicHandlers.TransactionHandler;
-import org.poo.app.logicHandlers.AccountHandler;
+import org.poo.app.payment.AccountHandler;
 import org.poo.app.userFacilities.Account;
 import org.poo.app.userFacilities.BusinessAccount;
-import org.poo.utils.CashbackStrategy;
 import org.poo.utils.Operation;
 
 public class SendMoney extends Operation {
-    public SendMoney(final CommandHandler handler, final ArrayNode output) {
+    public SendMoney(final CommandHandler handler,
+                     final ArrayNode output) {
         super(handler, output);
     }
 
@@ -52,7 +53,10 @@ public class SendMoney extends Operation {
         }
 
         double amountSent = handler.getAmount();
-        double amountSentAfterFees = PaymentHandler.getAmountAfterFees(DB.findUserByEmail(senderAccount.getEmail()), senderAccount, amountSent);
+        double amountSentAfterFees = PaymentHandler.getAmountAfterFees(
+                DB.findUserByEmail(senderAccount.getEmail()),
+                senderAccount,
+                amountSent);
 
         if (senderAccount.getBalance() - amountSentAfterFees < 0) {
             handler.setDescription("Insufficient funds");
@@ -64,7 +68,9 @@ public class SendMoney extends Operation {
         Account receiverAccount = DB.findAccountByIBAN(handler.getReceiver());
 
         if (receiverAccount == null) {
-            receiverAccount = DB.findAccountByIBAN(DB.findUserByEmail(senderAccount.getEmail()).getAliases().get(handler.getAccount()));
+            receiverAccount = DB.findAccountByIBAN(
+                    DB.findUserByEmail(senderAccount.getEmail())
+                            .getAliases().get(handler.getAccount()));
         }
 
         if (receiverAccount == null) {
@@ -74,31 +80,26 @@ public class SendMoney extends Operation {
                 return;
             }
 
-            double cashback;
-            if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
-                CashbackStrategy cashbackStrategy = new CashbackSpendingTreshold(amountSent, senderAccount, commerciant, user);
+            double cashback = PaymentHandler.getCashback(
+                    amountSent,
+                    senderAccount,
+                    commerciant,
+                    user);
 
-                new Context().processCashbackDetails(cashbackStrategy);
-
-                cashback = cashbackStrategy.getAvailableCashback();
-            } else if (commerciant.getCashbackStrategy().equals("nrOfTransactions")) {
-                CashbackStrategy cashbackStrategy = new CashbackNrOfTransactions(amountSent, senderAccount, commerciant);
-
-                cashback = cashbackStrategy.getAvailableCashback();
-
-                new Context().processCashbackDetails(cashbackStrategy);
-            } else {
-                return;
-            }
-
-            AccountHandler.removeFunds(senderAccount, amountSentAfterFees);
-            AccountHandler.addFunds(senderAccount, cashback);
+            AccountHandler.removeFunds(
+                    senderAccount,
+                    amountSentAfterFees);
+            AccountHandler.addFunds(
+                    senderAccount,
+                    cashback);
 
             TransactionHandler.addTransactionSendMoney(handler);
 
         } else {
-            double amountReceived = AccountHandler.transferFunds(senderAccount,
-                    receiverAccount, amountSent);
+            double amountReceived = AccountHandler.transferFunds(
+                    senderAccount,
+                    receiverAccount,
+                    amountSent);
 
             handler.setAmount(amountSent);
             TransactionHandler.addTransactionSendMoney(handler);
@@ -107,9 +108,16 @@ public class SendMoney extends Operation {
 
         }
 
-        if (senderAccount.getType().equals("business"))
-            TransactionHandler.addBusinessPayOnlineTransaction(handler,
+        if (senderAccount.getType().equals("business")) {
+            handler.setAccount(senderAccount.getIban());
+            TransactionHandler.addBusinessPayOnlineTransaction(
+                    handler,
                     DB.findUserByEmail(handler.getEmail()));
-        AccountHandler.incrementAndCheckIfPlanUpgradeIsAvailable(user, senderAccount, amountSent, handler);
+        }
+        AccountHandler.incrementAndCheckIfPlanUpgradeIsAvailable(
+                user,
+                senderAccount,
+                amountSent,
+                handler);
     }
 }

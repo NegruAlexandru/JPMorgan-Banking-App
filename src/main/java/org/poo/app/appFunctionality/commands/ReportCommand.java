@@ -10,12 +10,17 @@ public class ReportCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public ReportCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public ReportCommand(final CommandExecutor executor,
+                         final CommandHandler handler,
+                         final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.report(handler, output);

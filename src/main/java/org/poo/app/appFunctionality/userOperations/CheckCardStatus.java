@@ -8,7 +8,8 @@ import org.poo.app.userFacilities.Card;
 import org.poo.utils.Operation;
 
 public class CheckCardStatus extends Operation {
-    public CheckCardStatus(final CommandHandler handler, final ArrayNode output) {
+    public CheckCardStatus(final CommandHandler handler,
+                           final ArrayNode output) {
         super(handler, output);
     }
 
@@ -33,7 +34,8 @@ public class CheckCardStatus extends Operation {
         if (card.getCardStatus().equals("active")
                 && account.getBalance() <= account.getMinBalance()) {
             card.setCardStatus("frozen");
-            addTransactionToDB("You have reached the minimum amount of funds, the card will be frozen");
+            addTransactionToDB(
+                    "You have reached the minimum amount of funds, the card will be frozen");
         } else if (card.getCardStatus().equals("frozen")
                 && account.getBalance() > account.getMinBalance()) {
             card.setCardStatus("active");

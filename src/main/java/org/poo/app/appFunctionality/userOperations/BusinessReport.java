@@ -2,8 +2,8 @@ package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.poo.app.input.Transaction;
-import org.poo.app.input.User;
+import org.poo.app.baseClasses.Transaction;
+import org.poo.app.baseClasses.User;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
 import org.poo.app.userFacilities.Account;
@@ -18,7 +18,8 @@ import java.util.TreeMap;
 import static org.poo.app.logicHandlers.CommandHandler.OBJECT_MAPPER;
 
 public class BusinessReport extends Operation {
-    public BusinessReport(final CommandHandler handler, final ArrayNode output) {
+    public BusinessReport(final CommandHandler handler,
+                          final ArrayNode output) {
         super(handler, output);
     }
 
@@ -28,26 +29,24 @@ public class BusinessReport extends Operation {
     @Override
     public void execute() {
         Account account = DB.findAccountByIBAN(handler.getAccount());
+
         if (account == null) {
-            // Account not found
             return;
         }
 
         if (!account.getType().equals("business")) {
-            // Account is not of type business
             return;
         }
 
         BusinessAccount businessAccount = (BusinessAccount) account;
-        // check ownership
-//        if (!businessAccount.getOwner().getEmail().equals(handler.getEmail())) {
-//            return;
-//        }
-
         createReport(businessAccount);
     }
 
-    public void createReport(final BusinessAccount account) {
+    /**
+     * Create a report for a business account
+     * @param account the business account
+     */
+    private void createReport(final BusinessAccount account) {
         if (handler.getType().equals("transaction")) {
             createTransactionReport(account);
         } else if (handler.getType().equals("commerciant")) {
@@ -55,17 +54,27 @@ public class BusinessReport extends Operation {
         }
     }
 
-    public void createTransactionReport(final BusinessAccount account) {
+    /**
+     * Create a transaction report for a business account
+     * @param account the business account
+     */
+    private void createTransactionReport(final BusinessAccount account) {
         ObjectNode report = output.addObject();
         report.put("command", handler.getCommand());
 
         ObjectNode data = OBJECT_MAPPER.createObjectNode();
-        data.put("IBAN", account.getIban());
-        data.put("balance", account.getBalance());
-        data.put("currency", account.getCurrency());
-        data.put("spending limit", account.getSpendingLimit());
-        data.put("deposit limit", account.getDepositLimit());
-        data.put("statistics type", "transaction");
+        data.put("IBAN",
+                account.getIban());
+        data.put("balance",
+                account.getBalance());
+        data.put("currency",
+                account.getCurrency());
+        data.put("spending limit",
+                account.getSpendingLimit());
+        data.put("deposit limit",
+                account.getDepositLimit());
+        data.put("statistics type",
+                "transaction");
 
         LinkedHashMap<User, Double> spending = new LinkedHashMap<>();
         LinkedHashMap<User, Double> deposited = new LinkedHashMap<>();
@@ -79,7 +88,8 @@ public class BusinessReport extends Operation {
                 continue;
             }
 
-            if (transaction.getCommand().equals("sendMoney") || transaction.getCommand().equals("payOnline")) {
+            if (transaction.getCommand().equals("sendMoney")
+                || transaction.getCommand().equals("payOnline")) {
                 if (spending.containsKey(user)) {
                     Double spent = spending.get(user);
                     spent += transaction.getAmountDouble();
@@ -114,9 +124,12 @@ public class BusinessReport extends Operation {
             }
 
             ObjectNode managerNode = OBJECT_MAPPER.createObjectNode();
-            managerNode.put("username",  manager.getLastName() + " " + manager.getFirstName());
-            managerNode.put("spent", spentSum);
-            managerNode.put("deposited", depositedSum);
+            managerNode.put("username",
+                    manager.getLastName() + " " + manager.getFirstName());
+            managerNode.put("spent",
+                    spentSum);
+            managerNode.put("deposited",
+                    depositedSum);
             managers.add(managerNode);
         }
 
@@ -134,22 +147,35 @@ public class BusinessReport extends Operation {
             }
 
             ObjectNode employeeNode = OBJECT_MAPPER.createObjectNode();
-            employeeNode.put("username", employee.getLastName() + " " + employee.getFirstName());
-            employeeNode.put("spent", spentSum);
-            employeeNode.put("deposited", depositedSum);
+            employeeNode.put("username",
+                    employee.getLastName() + " " + employee.getFirstName());
+            employeeNode.put("spent",
+                    spentSum);
+            employeeNode.put("deposited",
+                    depositedSum);
             employees.add(employeeNode);
         }
 
-        data.set("managers", managers);
-        data.set("employees", employees);
-        data.put("total spent", totalSpent);
-        data.put("total deposited", totalDeposited);
+        data.set("managers",
+                managers);
+        data.set("employees",
+                employees);
+        data.put("total spent",
+                totalSpent);
+        data.put("total deposited",
+                totalDeposited);
 
-        report.set("output", data);
-        report.put("timestamp", handler.getTimestamp());
+        report.set("output",
+                data);
+        report.put("timestamp",
+                handler.getTimestamp());
     }
 
-    public void createCommerciantReport(final BusinessAccount account) {
+    /**
+     * Create a commerciant report for a business account
+     * @param account the business account
+     */
+    private void createCommerciantReport(final BusinessAccount account) {
         ObjectNode report = output.addObject();
         report.put("command", handler.getCommand());
         report.put("timestamp", handler.getTimestamp());
@@ -162,7 +188,7 @@ public class BusinessReport extends Operation {
         data.put("deposit limit", account.getDepositLimit());
 
         TreeMap<String, HashMap<User, Double>> commerciantSpending = new TreeMap<>();
-        HashMap<User, Double> duplicates = new HashMap<>();
+        HashMap<User, Double> userMapping = new HashMap<>();
 
         for (Transaction t : account.getBusinessTransactions()) {
             if (t.getCommerciant() == null) {
@@ -180,7 +206,7 @@ public class BusinessReport extends Operation {
                     double spent = employees.get(user);
                     spent += t.getAmountDouble();
                     employees.put(user, spent);
-                    duplicates.put(user, spent);
+                    userMapping.put(user, spent);
                 } else {
                     employees.put(user, t.getAmountDouble());
                 }
@@ -208,12 +234,14 @@ public class BusinessReport extends Operation {
                 String name = keyUser.getLastName() + " " + keyUser.getFirstName();
                 if (account.getEmployees().contains(keyUser)) {
                     employeesArray.add(name);
-                    if (duplicates.containsKey(keyUser) && Objects.equals(duplicates.get(keyUser), employees.get(keyUser))) {
+                    if (userMapping.containsKey(keyUser)
+                        && Objects.equals(userMapping.get(keyUser), employees.get(keyUser))) {
                         employeesArray.add(name);
                     }
                 } else {
                     managersArray.add(name);
-                    if (duplicates.containsKey(keyUser) && Objects.equals(duplicates.get(keyUser), employees.get(keyUser))) {
+                    if (userMapping.containsKey(keyUser)
+                        && Objects.equals(userMapping.get(keyUser), employees.get(keyUser))) {
                         employeesArray.add(name);
                     }
                 }
@@ -230,9 +258,5 @@ public class BusinessReport extends Operation {
         data.set("commerciants", commerciants);
         data.put("statistics type", "commerciant");
         report.set("output", data);
-    }
-
-    public void createReportHeader() {
-
     }
 }

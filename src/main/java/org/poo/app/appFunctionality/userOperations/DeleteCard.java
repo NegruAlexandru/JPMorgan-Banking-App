@@ -1,7 +1,7 @@
 package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.input.User;
+import org.poo.app.baseClasses.User;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
 import org.poo.app.logicHandlers.TransactionHandler;
@@ -11,7 +11,8 @@ import org.poo.app.userFacilities.Card;
 import org.poo.utils.Operation;
 
 public class DeleteCard extends Operation {
-    public DeleteCard(final CommandHandler handler, final ArrayNode output) {
+    public DeleteCard(final CommandHandler handler,
+                      final ArrayNode output) {
         super(handler, output);
     }
 
@@ -67,40 +68,43 @@ public class DeleteCard extends Operation {
             if (businessAccount.getEmployees().contains(DB.findUserByEmail(handler.getEmail()))) {
                 Card card = DB.getCardByCardNumber(handler.getCardNumber());
 
-                if (card == null)
+                if (card == null) {
                     return;
+                }
 
                 if (card.getType().equals("classic") && account.getBalance() > 0) {
                     return;
                 }
 
                 if (card.getEmailOfCreator().equals(handler.getEmail())) {
-                    addTransaction("The card has been destroyed", account);
+                    addTransaction(account);
                     account.deleteCard(handler.getCardNumber());
-//                    System.out.println("The card has been destroyed " + handler.getCardNumber());
-//                    System.out.println("timestamp: " + handler.getTimestamp());
                 }
             }
         } else {
             Card card = DB.getCardByCardNumber(handler.getCardNumber());
 
-            if (card == null)
+            if (card == null) {
                 return;
+            }
 
             if (card.getType().equals("classic") && account.getBalance() > 0) {
                 return;
             }
 
-            addTransaction("The card has been destroyed", account);
+            addTransaction(account);
             account.deleteCard(handler.getCardNumber());
-//            System.out.println("The card has been destroyed " + handler.getCardNumber());
-//            System.out.println("timestamp: " + handler.getTimestamp());
         }
     }
 
-    public void addTransaction(final String description, final Account account) {
+    /**
+     * Adds a transaction to the database
+     *
+     * @param account the account
+     */
+    private void addTransaction(final Account account) {
         handler.setEmail(account.getEmail());
-        handler.setDescription(description);
+        handler.setDescription("The card has been destroyed");
         handler.setAccount(account.getIban());
         TransactionHandler.addTransactionCard(handler);
     }

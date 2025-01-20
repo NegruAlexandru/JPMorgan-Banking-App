@@ -5,7 +5,9 @@ import org.poo.utils.CardVisitor;
 
 public class OneTimeCard extends Card {
 
-    public OneTimeCard(final String currency, final String iban, final String email) {
+    public OneTimeCard(final String currency,
+                       final String iban,
+                       final String email) {
         super(currency, iban, email);
         this.setType("one-time");
     }

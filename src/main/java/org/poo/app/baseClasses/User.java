@@ -1,4 +1,4 @@
-package org.poo.app.input;
+package org.poo.app.baseClasses;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,8 @@ import org.poo.app.userFacilities.SavingsAccount;
 import org.poo.fileio.UserInput;
 import org.poo.utils.RequestSP;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @Data
 @NoArgsConstructor
@@ -24,9 +25,13 @@ public class User {
     private ArrayList<Transaction> transactions = new ArrayList<>();
     private HashMap<String, String> aliases = new HashMap<>();
     private ArrayList<RequestSP> splitPaymentRequests = new ArrayList<>();
-    private int nrOfTransactionsOver300RON = 0;
+    private int nrOfTransactionsEligibleForPlanUpgrade = 0;
 
-    public User(final String firstName, final String lastName, final String email, final String birthDate, final String occupation) {
+    public User(final String firstName,
+                final String lastName,
+                final String email,
+                final String birthDate,
+                final String occupation) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -71,7 +76,8 @@ public class User {
      * @param interestRate interest rate of the account
      * @return the new account
      */
-    public Account addSavingsAccount(final String currency, final double interestRate) {
+    public Account addSavingsAccount(final String currency,
+                                     final double interestRate) {
         Account account = new SavingsAccount(email, currency, interestRate);
         this.accounts.add(account);
         DB.addAccount(account);
@@ -79,6 +85,11 @@ public class User {
         return account;
     }
 
+    /**
+     * Adds a new business account to the user
+     * @param currency currency of the account
+     * @return the new account
+     */
     public Account addBusinessAccount(final String currency) {
         Account account = new BusinessAccount(email, currency);
         this.accounts.add(account);
@@ -100,6 +111,10 @@ public class User {
         return account;
     }
 
+    /**
+     * Adds a request for a split payment to the user queue
+     * @param request request to be added
+     */
     public void addRequestSP(final RequestSP request) {
         splitPaymentRequests.add(request);
     }

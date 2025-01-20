@@ -10,12 +10,17 @@ public class SpendingsReportCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public SpendingsReportCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public SpendingsReportCommand(final CommandExecutor executor,
+                                  final CommandHandler handler,
+                                  final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.spendingsReport(handler, output);

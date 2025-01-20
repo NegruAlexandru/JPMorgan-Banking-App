@@ -2,10 +2,10 @@ package org.poo.app.appFunctionality.debug;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.poo.app.logicHandlers.AccountHandler;
+import org.poo.app.payment.AccountHandler;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
-import org.poo.app.input.User;
+import org.poo.app.baseClasses.User;
 import org.poo.utils.Operation;
 
 import static org.poo.app.logicHandlers.CommandHandler.OBJECT_MAPPER;
@@ -13,7 +13,8 @@ import static org.poo.app.logicHandlers.CommandHandler.OBJECT_MAPPER;
 public class PrintUsers extends Operation {
     private static final AccountHandler ACCOUNT_HANDLER = new AccountHandler();
 
-    public PrintUsers(final CommandHandler handler, final ArrayNode output) {
+    public PrintUsers(final CommandHandler handler,
+                      final ArrayNode output) {
         super(handler, output);
     }
 

@@ -8,7 +8,8 @@ import org.poo.app.userFacilities.Account;
 import org.poo.utils.Operation;
 
 public class CreateCard extends Operation {
-    public CreateCard(final CommandHandler handler, final ArrayNode output) {
+    public CreateCard(final CommandHandler handler,
+                      final ArrayNode output) {
         super(handler, output);
     }
 
@@ -31,7 +32,8 @@ public class CreateCard extends Operation {
      * @param description the description of the transaction
      * @param cardNumber the card number
      */
-    public void addTransaction(final String description, final String cardNumber) {
+    public void addTransaction(final String description,
+                               final String cardNumber) {
         handler.setCardNumber(cardNumber);
         handler.setDescription(description);
         TransactionHandler.addTransactionCard(handler);

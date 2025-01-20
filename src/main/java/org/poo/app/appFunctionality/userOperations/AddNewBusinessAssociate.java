@@ -1,8 +1,8 @@
 package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.input.User;
-import org.poo.app.logicHandlers.AccountHandler;
+import org.poo.app.baseClasses.User;
+import org.poo.app.payment.AccountHandler;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
 import org.poo.app.userFacilities.Account;
@@ -10,7 +10,8 @@ import org.poo.app.userFacilities.BusinessAccount;
 import org.poo.utils.Operation;
 
 public class AddNewBusinessAssociate extends Operation {
-    public AddNewBusinessAssociate(CommandHandler handler, ArrayNode output) {
+    public AddNewBusinessAssociate(final CommandHandler handler,
+                                   final ArrayNode output) {
         super(handler, output);
     }
     /**
@@ -19,8 +20,6 @@ public class AddNewBusinessAssociate extends Operation {
      */
     public void execute() {
         Account account = DB.findAccountByIBAN(handler.getAccount());
-        // account - care de business
-        // email - of associate
 
         if (account == null) {
             return;
@@ -34,9 +33,9 @@ public class AddNewBusinessAssociate extends Operation {
 
         User user = DB.findUserByEmail(handler.getEmail());
 
-        if (businessAccount.getEmployees().contains(user) || businessAccount.getManagers().contains(user) ||
-                businessAccount.getOwner().equals(user)) {
-//            addTransactionToOutput("description", "The user is already an associate of the account.");
+        if (businessAccount.getEmployees().contains(user)
+            || businessAccount.getManagers().contains(user)
+            || businessAccount.getOwner().equals(user)) {
             return;
         }
 

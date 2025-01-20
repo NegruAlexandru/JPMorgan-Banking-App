@@ -3,9 +3,9 @@ package org.poo.main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.input.Commerciant;
-import org.poo.app.input.ExchangeRate;
-import org.poo.app.input.User;
+import org.poo.app.baseClasses.Commerciant;
+import org.poo.app.payment.ExchangeRate;
+import org.poo.app.baseClasses.User;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
 import org.poo.checker.Checker;
@@ -105,7 +105,11 @@ public final class Main {
         );
     }
 
-    public static void loadFromFile(ObjectInput inputData) {
+    /**
+     * Load the data from the input file
+     * @param inputData the input data
+     */
+    public static void loadFromFile(final ObjectInput inputData) {
         for (UserInput userInput : inputData.getUsers()) {
             DB.addUser(new User(userInput));
         }

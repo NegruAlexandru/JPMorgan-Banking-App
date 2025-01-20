@@ -1,7 +1,7 @@
 package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.logicHandlers.AccountHandler;
+import org.poo.app.payment.AccountHandler;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
 import org.poo.app.logicHandlers.TransactionHandler;
@@ -10,7 +10,8 @@ import org.poo.app.userFacilities.SavingsAccount;
 import org.poo.utils.Operation;
 
 public class AddInterest extends Operation {
-    public AddInterest(CommandHandler handler, ArrayNode output) {
+    public AddInterest(final CommandHandler handler,
+                       final ArrayNode output) {
         super(handler, output);
     }
     /**
@@ -32,11 +33,17 @@ public class AddInterest extends Operation {
 
         AccountHandler.addFunds(account, amount);
 
-        addTransactionToDB("Interest rate income", account, amount);
+        addTransactionToDB(account, amount);
     }
 
-    public void addTransactionToDB(String description, Account account, double amount) {
-        handler.setDescription(description);
+    /**
+     * Add a transaction to the database
+     *
+     * @param account the account
+     * @param amount  the amount of the transaction
+     */
+    private void addTransactionToDB(final Account account, final double amount) {
+        handler.setDescription("Interest rate income");
         handler.setCurrency(account.getCurrency());
         handler.setAmount(amount);
         TransactionHandler.addInterestTransactionToDB(handler);

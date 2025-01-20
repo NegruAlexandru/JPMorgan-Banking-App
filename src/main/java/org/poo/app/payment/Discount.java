@@ -1,4 +1,4 @@
-package org.poo.app.userFacilities;
+package org.poo.app.payment;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,8 @@ public class Discount {
     private final double value;
     private boolean used = false;
 
-    public Discount(final String category, final double value) {
+    public Discount(final String category,
+                    final double value) {
         this.category = category;
         this.value = value;
     }

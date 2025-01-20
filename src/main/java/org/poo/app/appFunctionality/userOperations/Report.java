@@ -4,15 +4,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
-import org.poo.app.input.Transaction;
+import org.poo.app.baseClasses.Transaction;
 import org.poo.app.userFacilities.Account;
 import org.poo.utils.Operation;
 
 import static org.poo.app.logicHandlers.CommandHandler.OBJECT_MAPPER;
-import static org.poo.app.input.Transaction.formatOutput;
+import static org.poo.app.baseClasses.Transaction.formatOutput;
 
 public class Report extends Operation {
-    public Report(final CommandHandler handler, final ArrayNode output) {
+    public Report(final CommandHandler handler,
+                  final ArrayNode output) {
         super(handler, output);
     }
 
@@ -38,7 +39,13 @@ public class Report extends Operation {
         this.addMessageToOutput(transactions, account);
     }
 
-    public void addMessageToOutput(final ArrayNode transactions, final Account account) {
+    /**
+     * Add the message to the output
+     * @param transactions the transactions to add
+     * @param account the account to add
+     */
+    private void addMessageToOutput(final ArrayNode transactions,
+                                    final Account account) {
         ObjectNode node = OBJECT_MAPPER.createObjectNode();
         node.put("command", handler.getCommand());
         node.put("timestamp", handler.getTimestamp());

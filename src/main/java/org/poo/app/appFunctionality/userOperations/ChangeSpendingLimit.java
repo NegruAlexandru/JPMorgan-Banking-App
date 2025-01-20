@@ -8,7 +8,8 @@ import org.poo.app.userFacilities.BusinessAccount;
 import org.poo.utils.Operation;
 
 public class ChangeSpendingLimit extends Operation {
-    public ChangeSpendingLimit(final CommandHandler handler, final ArrayNode output) {
+    public ChangeSpendingLimit(final CommandHandler handler,
+                               final ArrayNode output) {
         super(handler, output);
     }
 
@@ -31,7 +32,8 @@ public class ChangeSpendingLimit extends Operation {
 
         // check ownership
         if (!businessAccount.getOwner().getEmail().equals(handler.getEmail())) {
-            addTransactionToOutput("description", "You must be owner in order to change spending limit.");
+            addTransactionToOutput("description",
+                    "You must be owner in order to change spending limit.");
             return;
         }
 

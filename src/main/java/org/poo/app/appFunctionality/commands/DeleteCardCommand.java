@@ -10,12 +10,17 @@ public class DeleteCardCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public DeleteCardCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public DeleteCardCommand(final CommandExecutor executor,
+                             final CommandHandler handler,
+                             final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.deleteCard(handler, output);

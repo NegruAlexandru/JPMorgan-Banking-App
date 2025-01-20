@@ -10,12 +10,17 @@ public class ChangeInterestRateCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public ChangeInterestRateCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public ChangeInterestRateCommand(final CommandExecutor executor,
+                                     final CommandHandler handler,
+                                     final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.changeInterestRate(handler, output);

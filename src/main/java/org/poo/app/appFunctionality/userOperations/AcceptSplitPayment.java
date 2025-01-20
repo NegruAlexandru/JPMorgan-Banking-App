@@ -1,7 +1,7 @@
 package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.input.User;
+import org.poo.app.baseClasses.User;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
 import org.poo.utils.Operation;
@@ -10,10 +10,14 @@ import org.poo.utils.RequestSP;
 import java.util.ArrayList;
 
 public class AcceptSplitPayment extends Operation {
-    public AcceptSplitPayment(CommandHandler handler, ArrayNode output) {
+    public AcceptSplitPayment(final CommandHandler handler,
+                              final ArrayNode output) {
         super(handler, output);
     }
 
+    /**
+     * Accepts a split payment request if the conditions are met
+     */
     @Override
     public void execute() {
         User user = DB.findUserByEmail(handler.getEmail());

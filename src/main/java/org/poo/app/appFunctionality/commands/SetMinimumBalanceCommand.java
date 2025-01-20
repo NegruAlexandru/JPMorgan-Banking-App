@@ -10,12 +10,17 @@ public class SetMinimumBalanceCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public SetMinimumBalanceCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public SetMinimumBalanceCommand(final CommandExecutor executor,
+                                    final CommandHandler handler,
+                                    final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.setMinimumBalance(handler, output);

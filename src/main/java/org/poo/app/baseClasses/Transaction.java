@@ -1,4 +1,4 @@
-package org.poo.app.input;
+package org.poo.app.baseClasses;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -246,31 +246,67 @@ public final class Transaction {
             return this;
         }
 
+        /**
+         * Sets the businessAssociatedUser of the transaction
+         *
+         * @param businessAssociatedUser the businessAssociatedUser of the transaction
+         * @return this Builder instance
+         */
         public Builder businessAssociatedUser(final User businessAssociatedUser) {
             this.businessAssociatedUser = businessAssociatedUser;
             return this;
         }
 
+        /**
+         * Sets the newPlanType of the transaction
+         *
+         * @param newPlanType the newPlanType of the transaction
+         * @return this Builder instance
+         */
         public Builder newPlanType(final String newPlanType) {
             this.newPlanType = newPlanType;
             return this;
         }
 
+        /**
+         * Sets the accountIBAN of the transaction
+         *
+         * @param accountIBAN the accountIBAN of the transaction
+         * @return this Builder instance
+         */
         public Builder accountIBAN(final String accountIBAN) {
             this.accountIBAN = accountIBAN;
             return this;
         }
 
+        /**
+         * Sets the amountForUsers of the transaction
+         *
+         * @param amountForUsers the amountForUsers of the transaction
+         * @return this Builder instance
+         */
         public Builder amountForUsers(final List<Double> amountForUsers) {
             this.amountForUsers = amountForUsers;
             return this;
         }
 
+        /**
+         * Sets the splitPaymentType of the transaction
+         *
+         * @param splitPaymentType the splitPaymentType of the transaction
+         * @return this Builder instance
+         */
         public Builder splitPaymentType(final String splitPaymentType) {
             this.splitPaymentType = splitPaymentType;
             return this;
         }
 
+        /**
+         * Sets the command of the transaction
+         *
+         * @param command the command of the transaction
+         * @return this Builder instance
+         */
         public Builder command(final String command) {
             this.command = command;
             return this;
@@ -294,6 +330,10 @@ public final class Transaction {
         account.getTransactions().add(this);
     }
 
+    /**
+     * Adds a business transaction to a business account
+     * @param account business account to add the transaction to
+     */
     public void addBusinessTransaction(final BusinessAccount account) {
         account.getBusinessTransactions().add(this);
     }
@@ -307,39 +347,48 @@ public final class Transaction {
     public static ObjectNode formatOutput(final Transaction transaction) {
         ObjectNode transactionNode = OBJECT_MAPPER.createObjectNode();
         if (transaction.getAccount() != null) {
-            transactionNode.put("account", transaction.getAccount());
+            transactionNode.put("account",
+                    transaction.getAccount());
         }
 
         if (transaction.getCard() != null) {
-            transactionNode.put("card", transaction.getCard());
+            transactionNode.put("card",
+                    transaction.getCard());
         }
 
         if (transaction.getCardHolder() != null) {
-            transactionNode.put("cardHolder", transaction.getCardHolder());
+            transactionNode.put("cardHolder",
+                    transaction.getCardHolder());
         }
 
         if (transaction.getAmount() != null) {
-            transactionNode.put("amount", transaction.getAmount());
+            transactionNode.put("amount",
+                    transaction.getAmount());
         }
 
         if (transaction.getAmountDouble() != 0) {
-            transactionNode.put("amount", transaction.getAmountDouble());
+            transactionNode.put("amount",
+                    transaction.getAmountDouble());
         }
 
         if (transaction.getCurrency() != null) {
-            transactionNode.put("currency", transaction.getCurrency());
+            transactionNode.put("currency",
+                    transaction.getCurrency());
         }
 
         if (transaction.getCommerciant() != null) {
-            transactionNode.put("commerciant", transaction.getCommerciant());
+            transactionNode.put("commerciant",
+                    transaction.getCommerciant());
         }
 
         if (transaction.getDescription() != null) {
-            transactionNode.put("description", transaction.getDescription());
+            transactionNode.put("description",
+                    transaction.getDescription());
         }
 
         if (transaction.getErrorMessage() != null) {
-            transactionNode.put("error", transaction.getErrorMessage());
+            transactionNode.put("error",
+                    transaction.getErrorMessage());
         }
 
         if (transaction.getInvolvedAccounts() != null) {
@@ -351,39 +400,48 @@ public final class Transaction {
         }
 
         if (transaction.getReceiverIBAN() != null) {
-            transactionNode.put("receiverIBAN", transaction.getReceiverIBAN());
+            transactionNode.put("receiverIBAN",
+                    transaction.getReceiverIBAN());
         }
 
         if (transaction.getSenderIBAN() != null) {
-            transactionNode.put("senderIBAN", transaction.getSenderIBAN());
+            transactionNode.put("senderIBAN",
+                    transaction.getSenderIBAN());
         }
 
         if (transaction.getTimestamp() != 0) {
-            transactionNode.put("timestamp", transaction.getTimestamp());
+            transactionNode.put("timestamp",
+                    transaction.getTimestamp());
         }
 
         if (transaction.getTransferType() != null) {
-            transactionNode.put("transferType", transaction.getTransferType());
+            transactionNode.put("transferType",
+                    transaction.getTransferType());
         }
 
         if (transaction.getClassicAccountIBAN() != null) {
-            transactionNode.put("classicAccountIBAN", transaction.getClassicAccountIBAN());
+            transactionNode.put("classicAccountIBAN",
+                    transaction.getClassicAccountIBAN());
         }
 
         if (transaction.getSavingsAccountIBAN() != null) {
-            transactionNode.put("savingsAccountIBAN", transaction.getSavingsAccountIBAN());
+            transactionNode.put("savingsAccountIBAN",
+                    transaction.getSavingsAccountIBAN());
         }
 
         if (transaction.getBusinessAssociatedUser() != null) {
-            transactionNode.put("businessAssociatedUser", transaction.getBusinessAssociatedUser().getEmail());
+            transactionNode.put("businessAssociatedUser",
+                    transaction.getBusinessAssociatedUser().getEmail());
         }
 
         if (transaction.getNewPlanType() != null) {
-            transactionNode.put("newPlanType", transaction.getNewPlanType());
+            transactionNode.put("newPlanType",
+                    transaction.getNewPlanType());
         }
 
         if (transaction.getAccountIBAN() != null) {
-            transactionNode.put("accountIBAN", transaction.getAccountIBAN());
+            transactionNode.put("accountIBAN",
+                    transaction.getAccountIBAN());
         }
 
         if (transaction.getAmountForUsers() != null) {
@@ -395,7 +453,8 @@ public final class Transaction {
         }
 
         if (transaction.getSplitPaymentType() != null) {
-            transactionNode.put("splitPaymentType", transaction.getSplitPaymentType());
+            transactionNode.put("splitPaymentType",
+                    transaction.getSplitPaymentType());
         }
 
         return transactionNode;

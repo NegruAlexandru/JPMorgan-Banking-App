@@ -8,7 +8,8 @@ import org.poo.app.userFacilities.SavingsAccount;
 import org.poo.utils.Operation;
 
 public class ChangeInterestRate extends Operation {
-    public ChangeInterestRate(final CommandHandler handler, final ArrayNode output) {
+    public ChangeInterestRate(final CommandHandler handler,
+                              final ArrayNode output) {
         super(handler, output);
     }
 
@@ -26,7 +27,8 @@ public class ChangeInterestRate extends Operation {
             SavingsAccount savingsAccount = (SavingsAccount) account;
             savingsAccount.setInterestRate(handler.getInterestRate());
 
-            addTransactionToDB("Interest rate of the account changed to " + handler.getInterestRate());
+            addTransactionToDB("Interest rate of the account changed to "
+                    + handler.getInterestRate());
         } else {
             addTransactionToOutput("description", "This is not a savings account");
         }

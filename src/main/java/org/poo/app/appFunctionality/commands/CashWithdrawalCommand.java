@@ -10,12 +10,17 @@ public class CashWithdrawalCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public CashWithdrawalCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public CashWithdrawalCommand(final CommandExecutor executor,
+                                 final CommandHandler handler,
+                                 final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.cashWithdrawal(handler, output);

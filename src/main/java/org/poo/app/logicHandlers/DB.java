@@ -3,9 +3,9 @@ package org.poo.app.logicHandlers;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.poo.app.input.Commerciant;
-import org.poo.app.input.ExchangeRate;
-import org.poo.app.input.User;
+import org.poo.app.baseClasses.Commerciant;
+import org.poo.app.payment.ExchangeRate;
+import org.poo.app.baseClasses.User;
 import org.poo.app.userFacilities.Account;
 import org.poo.app.userFacilities.Card;
 
@@ -133,7 +133,8 @@ public abstract class DB {
      * @param to the currency to convert to
      * @return the exchange rate
      */
-    public static ExchangeRate getExchangeRate(final String from, final String to) {
+    public static ExchangeRate getExchangeRate(final String from,
+                                               final String to) {
         for (ExchangeRate exchangeRate : exchangeRates) {
             if (exchangeRate.getFrom().equals(from) && exchangeRate.getTo().equals(to)) {
                 return exchangeRate;
@@ -149,7 +150,9 @@ public abstract class DB {
      * @param to the currency to convert to
      * @return the converted amount
      */
-    public static double convert(final double amount, final String from, final String to) {
+    public static double convert(final double amount,
+                                 final String from,
+                                 final String to) {
         ExchangeRate exchangeRate = getExchangeRate(from, to);
         return amount * exchangeRate.getRate();
     }
@@ -184,7 +187,8 @@ public abstract class DB {
      * @param account the account to add
      * @param cardNumber the card number to add
      */
-    public static void addAccountWithCardNumber(final Account account, final String cardNumber) {
+    public static void addAccountWithCardNumber(final Account account,
+                                                final String cardNumber) {
         accountsWithCardNumber.put(cardNumber, account);
     }
 
@@ -249,6 +253,11 @@ public abstract class DB {
         return null;
     }
 
+    /**
+     * Get a commerciant by name
+     * @param name the name to search for
+     * @return the commerciant with the given name
+     */
     public static Commerciant getCommerciantByName(final String name) {
         for (Commerciant commerciant : commerciants) {
             if (commerciant.getCommerciant().equals(name)) {
@@ -259,6 +268,11 @@ public abstract class DB {
         return null;
     }
 
+    /**
+     * Get a commerciant by IBAN
+     * @param iban the IBAN to search for
+     * @return the commerciant with the given IBAN
+     */
     public static Commerciant getCommerciantByIBAN(final String iban) {
         for (Commerciant commerciant : commerciants) {
             if (commerciant.getAccount().equals(iban)) {

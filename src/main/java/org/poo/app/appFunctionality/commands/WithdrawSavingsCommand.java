@@ -10,12 +10,17 @@ public class WithdrawSavingsCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public WithdrawSavingsCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public WithdrawSavingsCommand(final CommandExecutor executor,
+                                  final CommandHandler handler,
+                                  final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.withdrawSavings(handler, output);

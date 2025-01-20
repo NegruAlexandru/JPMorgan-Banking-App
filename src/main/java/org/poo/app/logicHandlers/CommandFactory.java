@@ -1,11 +1,37 @@
 package org.poo.app.logicHandlers;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.appFunctionality.commands.*;
+import org.poo.app.appFunctionality.commands.AcceptSplitPaymentCommand;
+import org.poo.app.appFunctionality.commands.AddAccountCommand;
+import org.poo.app.appFunctionality.commands.AddFundsCommand;
+import org.poo.app.appFunctionality.commands.AddInterestCommand;
+import org.poo.app.appFunctionality.commands.AddNewBusinessAssociateCommand;
+import org.poo.app.appFunctionality.commands.BusinessReportCommand;
+import org.poo.app.appFunctionality.commands.CashWithdrawalCommand;
+import org.poo.app.appFunctionality.commands.ChangeDepositLimitCommand;
+import org.poo.app.appFunctionality.commands.ChangeInterestRateCommand;
+import org.poo.app.appFunctionality.commands.ChangeSpendingLimitCommand;
+import org.poo.app.appFunctionality.commands.CheckCardStatusCommand;
+import org.poo.app.appFunctionality.commands.CreateCardCommand;
+import org.poo.app.appFunctionality.commands.CreateOneTimeCardCommand;
+import org.poo.app.appFunctionality.commands.DeleteAccountCommand;
+import org.poo.app.appFunctionality.commands.DeleteCardCommand;
+import org.poo.app.appFunctionality.commands.PayOnlineCommand;
+import org.poo.app.appFunctionality.commands.PrintTransactionsCommand;
+import org.poo.app.appFunctionality.commands.PrintUsersCommand;
+import org.poo.app.appFunctionality.commands.ReportCommand;
+import org.poo.app.appFunctionality.commands.RejectSplitPaymentCommand;
+import org.poo.app.appFunctionality.commands.SendMoneyCommand;
+import org.poo.app.appFunctionality.commands.SetAliasCommand;
+import org.poo.app.appFunctionality.commands.SetMinimumBalanceCommand;
+import org.poo.app.appFunctionality.commands.SpendingsReportCommand;
+import org.poo.app.appFunctionality.commands.SplitPaymentCommand;
+import org.poo.app.appFunctionality.commands.UpgradePlanCommand;
+import org.poo.app.appFunctionality.commands.WithdrawSavingsCommand;
 import org.poo.utils.Command;
 
 class CommandFactory {
-    private static final CommandExecutor executor = new CommandExecutor();
+    private static final CommandExecutor EXECUTOR = new CommandExecutor();
 
     public enum CommandType {
         addAccount,
@@ -37,36 +63,123 @@ class CommandFactory {
         changeDepositLimit
     }
 
+    /**
+     * Returns the command object corresponding to the command type
+     * @param handler first argument of the command
+     * @param output second argument of the command
+     * @return Command object
+     */
     public static Command getCommand(final CommandHandler handler, final ArrayNode output) {
         CommandType commandType = CommandType.valueOf(handler.getCommand());
         return switch (commandType) {
-            case addAccount ->              new AddAccountCommand(executor, handler, output);
-            case addFunds ->                new AddFundsCommand(executor, handler, output);
-            case createCard ->              new CreateCardCommand(executor, handler, output);
-            case createOneTimeCard ->       new CreateOneTimeCardCommand(executor, handler, output);
-            case deleteCard ->              new DeleteCardCommand(executor, handler, output);
-            case setMinimumBalance ->       new SetMinimumBalanceCommand(executor, handler, output);
-            case sendMoney ->               new SendMoneyCommand(executor, handler, output);
-            case setAlias ->                new SetAliasCommand(executor, handler, output);
-            case splitPayment ->            new SplitPaymentCommand(executor, handler, output);
-            case deleteAccount ->           new DeleteAccountCommand(executor, handler, output);
-            case payOnline ->               new PayOnlineCommand(executor, handler, output);
-            case checkCardStatus ->         new CheckCardStatusCommand(executor, handler, output);
-            case report ->                  new ReportCommand(executor, handler, output);
-            case addInterest ->             new AddInterestCommand(executor, handler, output);
-            case changeInterestRate ->      new ChangeInterestRateCommand(executor, handler, output);
-            case spendingsReport ->         new SpendingsReportCommand(executor, handler, output);
-            case printUsers ->              new PrintUsersCommand(executor, handler, output);
-            case printTransactions ->       new PrintTransactionsCommand(executor, handler, output);
-            case upgradePlan ->             new UpgradePlanCommand(executor, handler, output);
-            case withdrawSavings ->         new WithdrawSavingsCommand(executor, handler, output);
-            case cashWithdrawal ->          new CashWithdrawalCommand(executor, handler, output);
-            case acceptSplitPayment ->      new AcceptSplitPaymentCommand(executor, handler, output);
-            case rejectSplitPayment ->      new RejectSplitPaymentCommand(executor, handler, output);
-            case addNewBusinessAssociate -> new AddNewBusinessAssociateCommand(executor, handler, output);
-            case changeSpendingLimit ->     new ChangeSpendingLimitCommand(executor, handler, output);
-            case changeDepositLimit ->      new ChangeDepositLimitCommand(executor, handler, output);
-            case businessReport ->          new BusinessReportCommand(executor, handler, output);
+            case addAccount ->              new AddAccountCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case addFunds ->                new AddFundsCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case createCard ->              new CreateCardCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case createOneTimeCard ->       new CreateOneTimeCardCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case deleteCard ->              new DeleteCardCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case setMinimumBalance ->       new SetMinimumBalanceCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case sendMoney ->               new SendMoneyCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case setAlias ->                new SetAliasCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case splitPayment ->            new SplitPaymentCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case deleteAccount ->           new DeleteAccountCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case payOnline ->               new PayOnlineCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case checkCardStatus ->         new CheckCardStatusCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case report ->                  new ReportCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case addInterest ->             new AddInterestCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case changeInterestRate ->      new ChangeInterestRateCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case spendingsReport ->         new SpendingsReportCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case printUsers ->              new PrintUsersCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case printTransactions ->       new PrintTransactionsCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case upgradePlan ->             new UpgradePlanCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case withdrawSavings ->         new WithdrawSavingsCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case cashWithdrawal ->          new CashWithdrawalCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case acceptSplitPayment ->      new AcceptSplitPaymentCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case rejectSplitPayment ->      new RejectSplitPaymentCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case addNewBusinessAssociate -> new AddNewBusinessAssociateCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case changeSpendingLimit ->     new ChangeSpendingLimitCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case changeDepositLimit ->      new ChangeDepositLimitCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
+            case businessReport ->          new BusinessReportCommand(
+                    EXECUTOR,
+                    handler,
+                    output);
         };
     }
 }

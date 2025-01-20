@@ -1,4 +1,4 @@
-package org.poo.app.input;
+package org.poo.app.baseClasses;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package org.poo.app.input;
+package org.poo.app.payment;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +19,10 @@ public class ExchangeRate {
         this.timestamp = exchange.getTimestamp();
     }
 
-    public ExchangeRate(final String from, final String to,
-                        final double rate, final int timestamp) {
+    public ExchangeRate(final String from,
+                        final String to,
+                        final double rate,
+                        final int timestamp) {
         this.from = from;
         this.to = to;
         this.rate = rate;

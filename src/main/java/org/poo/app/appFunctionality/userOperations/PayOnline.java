@@ -1,16 +1,20 @@
 package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.input.Commerciant;
-import org.poo.app.input.User;
-import org.poo.app.logicHandlers.*;
+import org.poo.app.baseClasses.Commerciant;
+import org.poo.app.baseClasses.User;
+import org.poo.app.logicHandlers.DB;
+import org.poo.app.payment.PaymentHandler;
+import org.poo.app.logicHandlers.TransactionHandler;
+import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.userFacilities.Account;
 import org.poo.app.userFacilities.BusinessAccount;
 import org.poo.app.userFacilities.Card;
 import org.poo.utils.Operation;
 
 public class PayOnline extends Operation {
-    public PayOnline(final CommandHandler handler, final ArrayNode output) {
+    public PayOnline(final CommandHandler handler,
+                     final ArrayNode output) {
         super(handler, output);
     }
     /**
@@ -81,7 +85,8 @@ public class PayOnline extends Operation {
             TransactionHandler.addTransactionDescriptionTimestamp(handler);
 
             return;
-        } else if (ownerAccount.getBalance() - ownerAccount.getMinBalance() - amountAfterFees <= 0) {
+        } else if (
+                ownerAccount.getBalance() - ownerAccount.getMinBalance() - amountAfterFees <= 0) {
             handler.setDescription("The card is frozen");
             card.setCardStatus("frozen");
             TransactionHandler.addTransactionDescriptionTimestamp(handler);
@@ -89,6 +94,6 @@ public class PayOnline extends Operation {
             return;
         }
 
-        PaymentHandler.pay(ownerAccount, card, handler);
+        new PaymentHandler(ownerAccount, handler).pay();
     }
 }

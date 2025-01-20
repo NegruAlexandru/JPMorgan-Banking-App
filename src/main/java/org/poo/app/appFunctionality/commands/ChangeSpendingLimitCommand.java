@@ -10,12 +10,17 @@ public class ChangeSpendingLimitCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public ChangeSpendingLimitCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public ChangeSpendingLimitCommand(final CommandExecutor executor,
+                                      final CommandHandler handler,
+                                      final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.changeSpendingLimit(handler, output);

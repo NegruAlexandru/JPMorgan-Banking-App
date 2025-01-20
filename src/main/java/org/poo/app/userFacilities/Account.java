@@ -3,9 +3,10 @@ package org.poo.app.userFacilities;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.poo.app.input.Commerciant;
+import org.poo.app.baseClasses.Commerciant;
 import org.poo.app.logicHandlers.DB;
-import org.poo.app.input.Transaction;
+import org.poo.app.baseClasses.Transaction;
+import org.poo.app.payment.Discount;
 import org.poo.utils.AccountInterface;
 import org.poo.utils.AccountVisitor;
 import org.poo.utils.Utils;
@@ -25,19 +26,19 @@ public class Account implements AccountInterface {
     private ArrayList<Card> cards = new ArrayList<>();
     private ArrayList<Transaction> transactions = new ArrayList<>();
     private ArrayList<Discount> cashbacks = new ArrayList<>();
-    private LinkedHashMap<Commerciant, Integer> nrOfTransactionsToCommerciant = new LinkedHashMap<>();
-//    private LinkedHashMap<Commerciant, Double> totalSpentToCommerciant = new LinkedHashMap<>();
+    private LinkedHashMap<Commerciant, Integer> nrOfTransactionsToCommerciant
+            = new LinkedHashMap<>();
     private int nrOfTransactions;
     private double totalSpent;
 
-    public Account(final String email, final String currency) {
+    public Account(final String email,
+                   final String currency) {
         this.email = email;
         this.currency = currency;
         this.iban = Utils.generateIBAN();
         this.minBalance = 0;
         this.balance = 0;
         this.type = "classic";
-//        this.nrOfTransactions = 0;
         this.totalSpent = 0;
     }
 

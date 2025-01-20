@@ -10,12 +10,17 @@ public class PrintTransactionsCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public PrintTransactionsCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public PrintTransactionsCommand(final CommandExecutor executor,
+                                    final CommandHandler handler,
+                                    final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.printTransactions(handler, output);

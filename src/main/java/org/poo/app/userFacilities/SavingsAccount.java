@@ -10,7 +10,9 @@ import org.poo.utils.AccountVisitor;
 public class SavingsAccount extends Account {
     private double interestRate;
 
-    public SavingsAccount(final String email, final String currency, final double interestRate) {
+    public SavingsAccount(final String email,
+                          final String currency,
+                          final double interestRate) {
         super(email, currency);
         this.interestRate = interestRate;
         this.setType("savings");

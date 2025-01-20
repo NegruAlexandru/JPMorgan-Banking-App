@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
 import org.poo.app.logicHandlers.TransactionHandler;
-import org.poo.app.input.User;
+import org.poo.app.baseClasses.User;
 import org.poo.app.userFacilities.Account;
 import org.poo.utils.Operation;
 
 public class AddAccount extends Operation {
-    public AddAccount(CommandHandler handler, ArrayNode output) {
+    public AddAccount(final CommandHandler handler,
+                      final ArrayNode output) {
         super(handler, output);
     }
 
@@ -22,7 +23,9 @@ public class AddAccount extends Operation {
 
         Account newAccount;
         switch (handler.getAccountType()) {
-            case "savings" -> newAccount = user.addSavingsAccount(handler.getCurrency(), handler.getInterestRate());
+            case "savings" -> newAccount = user.addSavingsAccount(
+                    handler.getCurrency(),
+                    handler.getInterestRate());
             case "classic" -> newAccount = user.addAccount(handler.getCurrency());
             case "business" -> newAccount = user.addBusinessAccount(handler.getCurrency());
             default -> {
@@ -30,12 +33,17 @@ public class AddAccount extends Operation {
             }
         }
 
-        addTransaction("New account created", newAccount);
+        addTransaction(newAccount);
     }
 
-    public void addTransaction(final String description, final Account account) {
+    /**
+     * Adds a transaction to the output
+     *
+     * @param account the account
+     */
+    private void addTransaction(final Account account) {
         handler.setAccount(account.getIban());
-        handler.setDescription(description);
+        handler.setDescription("New account created");
         TransactionHandler.addTransactionDescriptionTimestamp(handler);
     }
 }

@@ -4,17 +4,18 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
-import org.poo.app.input.Transaction;
+import org.poo.app.baseClasses.Transaction;
 import org.poo.app.userFacilities.Account;
 import org.poo.utils.Operation;
 
 import java.util.TreeMap;
 
 import static org.poo.app.logicHandlers.CommandHandler.OBJECT_MAPPER;
-import static org.poo.app.input.Transaction.formatOutput;
+import static org.poo.app.baseClasses.Transaction.formatOutput;
 
 public class SpendingsReport extends Operation {
-    public SpendingsReport(final CommandHandler handler, final ArrayNode output) {
+    public SpendingsReport(final CommandHandler handler,
+                           final ArrayNode output) {
         super(handler, output);
     }
 
@@ -29,8 +30,8 @@ public class SpendingsReport extends Operation {
         }
 
         if (account.getType().equals("savings")) {
-            addOutputMessageToOutput("error",
-                "This kind of report is not supported for a saving account");
+            addOutputMessageToOutput(
+            );
             return;
         }
 
@@ -80,8 +81,15 @@ public class SpendingsReport extends Operation {
         }
     }
 
-    private void addMessageToOutput(final Account account, final ArrayNode commerciants,
-                                   final ArrayNode commerciantTransactions) {
+    /**
+     * Add a message to the output
+     * @param account the account
+     * @param commerciants the commerciants
+     * @param commerciantTransactions the commerciant transactions
+     */
+    private void addMessageToOutput(final Account account,
+                                    final ArrayNode commerciants,
+                                    final ArrayNode commerciantTransactions) {
         ObjectNode node = OBJECT_MAPPER.createObjectNode();
         node.put("command", handler.getCommand());
         node.put("timestamp", handler.getTimestamp());
@@ -97,10 +105,14 @@ public class SpendingsReport extends Operation {
         output.add(node);
     }
 
-    private void addOutputMessageToOutput(String key, String value) {
+    /**
+     * Add a message to the output
+     */
+    private void addOutputMessageToOutput() {
         ObjectNode node = OBJECT_MAPPER.createObjectNode();
         node.put("command", handler.getCommand());
-        node.set("output", OBJECT_MAPPER.createObjectNode().put(key, value));
+        node.set("output", OBJECT_MAPPER.createObjectNode().put("error",
+                "This kind of report is not supported for a saving account"));
         node.put("timestamp", handler.getTimestamp());
         output.add(node);
     }

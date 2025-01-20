@@ -1,22 +1,35 @@
-package org.poo.app.logicHandlers;
+package org.poo.app.payment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.poo.app.input.User;
-import org.poo.app.userFacilities.*;
+import org.poo.app.baseClasses.User;
+import org.poo.app.logicHandlers.CommandHandler;
+import org.poo.app.logicHandlers.DB;
+import org.poo.app.logicHandlers.TransactionHandler;
+import org.poo.app.userFacilities.Account;
+import org.poo.app.userFacilities.BusinessAccount;
+import org.poo.app.userFacilities.Card;
+import org.poo.app.userFacilities.SavingsAccount;
+import org.poo.app.userFacilities.OneTimeCard;
 import org.poo.utils.AccountVisitor;
 import org.poo.utils.CardVisitor;
 
 public class AccountHandler implements AccountVisitor, CardVisitor {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final int NR_OF_TRANSACTIONS_FOR_PLAN_UPGRADE = 5;
+    private static final int PLAN_UPGRADE_THRESHOLD = 300;
+    private static final String THRESHOLD_CURRENCY = "RON";
+    private static final String PLAN_TO_UPGRADE_FROM = "silver";
+    private static final String PLAN_TO_UPGRADE_TO = "gold";
 
     /**
      * Removes funds from an account
      * @param account account to add funds to
      * @param amount amount to remove
      */
-    public static void addFunds(final Account account, final double amount) {
+    public static void addFunds(final Account account,
+                                final double amount) {
         account.setBalance(account.getBalance() + amount);
     }
 
@@ -25,7 +38,8 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param account account to remove funds from
      * @param amount amount to remove
      */
-    public static void removeFunds(final Account account, final double amount) {
+    public static void removeFunds(final Account account,
+                                   final double amount) {
         account.setBalance(account.getBalance() - amount);
     }
 
@@ -37,32 +51,50 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @return the amount transferred
      */
     public static double transferFunds(final Account sender,
-                                       final Account receiver, double amount) {
+                                       final Account receiver,
+                                       final double amount) {
 
         User user = DB.findUserByEmail(sender.getEmail());
-        double amountAndFees = PaymentHandler.getAmountAfterFees(user, sender, amount);
+        double amountAndFees = PaymentHandler.getAmountAfterFees(
+                user,
+                sender,
+                amount);
 
         removeFunds(sender, amountAndFees);
 
-        amount = DB.convert(amount, sender.getCurrency(), receiver.getCurrency());
+        double amountReceived = DB.convert(
+                amount,
+                sender.getCurrency(),
+                receiver.getCurrency());
 
-        addFunds(receiver, amount);
+        addFunds(receiver, amountReceived);
 
-        return amount;
+        return amountReceived;
     }
 
+    /**
+     * Increments the number of transactions for a user and checks if a plan upgrade is available
+     * @param user user to increment the number of transactions for
+     * @param account account to check the number of transactions for
+     * @param amount amount to check if a plan upgrade is available
+     * @param handler command handler to set the new plan type
+     */
     public static void incrementAndCheckIfPlanUpgradeIsAvailable(final User user,
                                                                  final Account account,
                                                                  final double amount,
                                                                  final CommandHandler handler) {
-        if (user.getPlan().equals("silver")) {
-            double amountInRon = DB.convert(amount, account.getCurrency(), "RON");
-            if (amountInRon >= 300) {
+        if (user.getPlan().equals(PLAN_TO_UPGRADE_FROM)) {
+            double amountInCurrencyNeeded = DB.convert(
+                    amount,
+                    account.getCurrency(),
+                    THRESHOLD_CURRENCY);
+            if (amountInCurrencyNeeded >= PLAN_UPGRADE_THRESHOLD) {
+                int num = user.getNrOfTransactionsEligibleForPlanUpgrade();
+                num++;
+                user.setNrOfTransactionsEligibleForPlanUpgrade(num);
 
-                user.setNrOfTransactionsOver300RON(user.getNrOfTransactionsOver300RON() + 1);
-
-                if (user.getNrOfTransactionsOver300RON() == 5) {
-                    user.setPlan("gold");
+                if (num == NR_OF_TRANSACTIONS_FOR_PLAN_UPGRADE) {
+                    user.setPlan(PLAN_TO_UPGRADE_TO);
                     handler.setNewPlanType(user.getPlan());
                     handler.setAccount(account.getIban());
                     handler.setDescription("Upgrade plan");
@@ -77,7 +109,8 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param account business account to add user to
      * @param user user to add to the business account's managers list
      */
-    public void addNewManager(final BusinessAccount account, final User user) {
+    public void addNewManager(final BusinessAccount account,
+                              final User user) {
         account.getManagers().add(user);
     }
 
@@ -86,7 +119,8 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param account business account to add user to
      * @param user user to add to the business account's employees list
      */
-    public void addNewEmployee(final BusinessAccount account, final User user) {
+    public void addNewEmployee(final BusinessAccount account,
+                               final User user) {
         account.getEmployees().add(user);
     }
 

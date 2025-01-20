@@ -1,17 +1,22 @@
 package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.logicHandlers.AccountHandler;
+import org.poo.app.payment.AccountHandler;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
-import org.poo.app.input.User;
+import org.poo.app.baseClasses.User;
 import org.poo.app.userFacilities.Account;
 import org.poo.utils.Operation;
 
 import static org.poo.app.logicHandlers.TransactionHandler.addUpgradePlanTransactionToDB;
 
 public class UpgradePlan extends Operation {
-    public UpgradePlan(CommandHandler handler, ArrayNode output) {
+    private static final int SILVER_TO_GOLD = 250;
+    private static final int STANDARD_TO_SILVER = 100;
+    private static final int STANDARD_TO_GOLD = 350;
+
+    public UpgradePlan(final CommandHandler handler,
+                       final ArrayNode output) {
         super(handler, output);
     }
 
@@ -66,13 +71,13 @@ public class UpgradePlan extends Operation {
         int sumToPay = 0;
         if (user.getPlan().equals("student") || user.getPlan().equals("standard")) {
             if (handler.getNewPlanType().equals("silver")) {
-                sumToPay = 100;
+                sumToPay = STANDARD_TO_SILVER;
             } else if (handler.getNewPlanType().equals("gold")) {
-                sumToPay = 350;
+                sumToPay = STANDARD_TO_GOLD;
             }
         } else if (user.getPlan().equals("silver")) {
             if (handler.getNewPlanType().equals("gold")) {
-                sumToPay = 250;
+                sumToPay = SILVER_TO_GOLD;
             }
         }
         return sumToPay;

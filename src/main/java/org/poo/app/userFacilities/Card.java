@@ -17,7 +17,9 @@ public class Card implements CardInterface {
     private String type;
     private String emailOfCreator;
 
-    public Card(final String currency, final String iban, final String email) {
+    public Card(final String currency,
+                final String iban,
+                final String email) {
         this.cardNumber = Utils.generateCardNumber();
         this.currency = currency;
         this.iban = iban;

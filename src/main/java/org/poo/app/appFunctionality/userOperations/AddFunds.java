@@ -1,7 +1,7 @@
 package org.poo.app.appFunctionality.userOperations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.app.logicHandlers.AccountHandler;
+import org.poo.app.payment.AccountHandler;
 import org.poo.app.logicHandlers.CommandHandler;
 import org.poo.app.logicHandlers.DB;
 import org.poo.app.logicHandlers.TransactionHandler;
@@ -10,7 +10,8 @@ import org.poo.app.userFacilities.BusinessAccount;
 import org.poo.utils.Operation;
 
 public class AddFunds extends Operation {
-    public AddFunds(CommandHandler handler, ArrayNode output) {
+    public AddFunds(final CommandHandler handler,
+                    final ArrayNode output) {
         super(handler, output);
     }
 
@@ -30,7 +31,8 @@ public class AddFunds extends Operation {
 
             if (!businessAccount.getManagers().contains(DB.findUserByEmail(handler.getEmail()))
                 && !businessAccount.getOwner().equals(DB.findUserByEmail(handler.getEmail()))
-                && !businessAccount.getEmployees().contains(DB.findUserByEmail(handler.getEmail()))) {
+                && !businessAccount.getEmployees().contains(
+                        DB.findUserByEmail(handler.getEmail()))) {
                 return;
             }
             if (!businessAccount.getManagers().contains(DB.findUserByEmail(handler.getEmail()))

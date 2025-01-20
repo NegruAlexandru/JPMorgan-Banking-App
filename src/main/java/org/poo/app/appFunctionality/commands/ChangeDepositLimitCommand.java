@@ -10,12 +10,17 @@ public class ChangeDepositLimitCommand implements Command {
     private final CommandHandler handler;
     private final ArrayNode output;
 
-    public ChangeDepositLimitCommand(CommandExecutor executor, CommandHandler handler, ArrayNode output) {
+    public ChangeDepositLimitCommand(final CommandExecutor executor,
+                                     final CommandHandler handler,
+                                     final ArrayNode output) {
         this.executor = executor;
         this.handler = handler;
         this.output = output;
     }
 
+    /**
+     * Execute the command
+     */
     @Override
     public void execute() {
         executor.changeDepositLimit(handler, output);

@@ -7,7 +7,8 @@ import org.poo.app.userFacilities.Account;
 import org.poo.utils.Operation;
 
 public class SetMinimumBalance extends Operation {
-    public SetMinimumBalance(final CommandHandler handler, final ArrayNode output) {
+    public SetMinimumBalance(final CommandHandler handler,
+                             final ArrayNode output) {
         super(handler, output);
     }
 
