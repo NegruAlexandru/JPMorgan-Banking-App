@@ -1,9 +1,9 @@
 package org.poo.utils;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.poo.app.user_facilities.Account;
-import org.poo.app.user_facilities.SavingsAccount;
-import org.poo.app.user_facilities.BusinessAccount;
+import org.poo.app.userFacilities.Account;
+import org.poo.app.userFacilities.SavingsAccount;
+import org.poo.app.userFacilities.BusinessAccount;
 
 public interface AccountVisitor {
     /**

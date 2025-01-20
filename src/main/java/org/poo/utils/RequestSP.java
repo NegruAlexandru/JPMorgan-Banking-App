@@ -2,7 +2,7 @@ package org.poo.utils;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.poo.app.app_functionality.user_operations.SplitPayment;
+import org.poo.app.appFunctionality.userOperations.SplitPayment;
 import org.poo.app.input.User;
 
 @Getter

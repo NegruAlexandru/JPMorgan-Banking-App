@@ -2,10 +2,10 @@ package org.poo.utils;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.poo.app.logic_handlers.CommandHandler;
-import org.poo.app.logic_handlers.TransactionHandler;
+import org.poo.app.logicHandlers.CommandHandler;
+import org.poo.app.logicHandlers.TransactionHandler;
 
-import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
+import static org.poo.app.logicHandlers.CommandHandler.OBJECT_MAPPER;
 
 public abstract class Operation {
     protected final CommandHandler handler;

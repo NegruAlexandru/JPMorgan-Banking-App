@@ -1,0 +1,49 @@
+package org.poo.app.appFunctionality.userOperations;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.poo.app.input.User;
+import org.poo.app.logicHandlers.AccountHandler;
+import org.poo.app.logicHandlers.CommandHandler;
+import org.poo.app.logicHandlers.DB;
+import org.poo.app.userFacilities.Account;
+import org.poo.app.userFacilities.BusinessAccount;
+import org.poo.utils.Operation;
+
+public class AddNewBusinessAssociate extends Operation {
+    public AddNewBusinessAssociate(CommandHandler handler, ArrayNode output) {
+        super(handler, output);
+    }
+    /**
+     * Adds a new business associate to the business account
+     *
+     */
+    public void execute() {
+        Account account = DB.findAccountByIBAN(handler.getAccount());
+        // account - care de business
+        // email - of associate
+
+        if (account == null) {
+            return;
+        }
+
+        if (!account.getType().equals("business")) {
+            return;
+        }
+
+        BusinessAccount businessAccount = (BusinessAccount) account;
+
+        User user = DB.findUserByEmail(handler.getEmail());
+
+        if (businessAccount.getEmployees().contains(user) || businessAccount.getManagers().contains(user) ||
+                businessAccount.getOwner().equals(user)) {
+//            addTransactionToOutput("description", "The user is already an associate of the account.");
+            return;
+        }
+
+        if (handler.getRole().equals("employee")) {
+            new AccountHandler().addNewEmployee(businessAccount, user);
+        } else if (handler.getRole().equals("manager")) {
+            new AccountHandler().addNewManager(businessAccount, user);
+        }
+    }
+}

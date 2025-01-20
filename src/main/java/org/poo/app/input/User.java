@@ -2,11 +2,10 @@ package org.poo.app.input;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.poo.app.app_functionality.debug.Transaction;
-import org.poo.app.logic_handlers.DB;
-import org.poo.app.user_facilities.Account;
-import org.poo.app.user_facilities.BusinessAccount;
-import org.poo.app.user_facilities.SavingsAccount;
+import org.poo.app.logicHandlers.DB;
+import org.poo.app.userFacilities.Account;
+import org.poo.app.userFacilities.BusinessAccount;
+import org.poo.app.userFacilities.SavingsAccount;
 import org.poo.fileio.UserInput;
 import org.poo.utils.RequestSP;
 

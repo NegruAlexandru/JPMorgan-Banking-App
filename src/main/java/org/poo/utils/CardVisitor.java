@@ -1,8 +1,8 @@
 package org.poo.utils;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.poo.app.user_facilities.Card;
-import org.poo.app.user_facilities.OneTimeCard;
+import org.poo.app.userFacilities.Card;
+import org.poo.app.userFacilities.OneTimeCard;
 
 public interface CardVisitor {
     /**
