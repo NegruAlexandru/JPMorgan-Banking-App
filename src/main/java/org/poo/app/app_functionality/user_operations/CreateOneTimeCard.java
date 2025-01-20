@@ -7,6 +7,8 @@ import org.poo.app.logic_handlers.TransactionHandler;
 import org.poo.app.user_facilities.Account;
 import org.poo.utils.Operation;
 
+import static org.poo.app.logic_handlers.CommandHandler.ibannenorocit;
+
 public class CreateOneTimeCard extends Operation {
     public CreateOneTimeCard(final CommandHandler handler, final ArrayNode output) {
         super(handler, output);
@@ -23,7 +25,14 @@ public class CreateOneTimeCard extends Operation {
             return;
         }
 
-        addTransaction("New card created", account.createOneTimeCard(handler.getEmail()));
+        String cardNumber = account.createOneTimeCard(handler.getEmail());
+        addTransaction("New card created", cardNumber);
+//        if (account.getIban().equals(ibannenorocit)) {
+//            System.out.println("New one-time card created: " + cardNumber);
+//        }
+//        System.out.println("New one-time card created: " + cardNumber);
+//        System.out.println("Account IBAN: " + account.getIban());
+//        System.out.println("Timestamp: " + handler.getTimestamp());
     }
 
     public void addTransaction(final String description, final String cardNumber) {

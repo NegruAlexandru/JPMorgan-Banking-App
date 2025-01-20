@@ -12,6 +12,7 @@ import org.poo.utils.Operation;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import static org.poo.app.logic_handlers.CommandHandler.OBJECT_MAPPER;
@@ -161,6 +162,7 @@ public class BusinessReport extends Operation {
         data.put("deposit limit", account.getDepositLimit());
 
         TreeMap<String, HashMap<User, Double>> commerciantSpending = new TreeMap<>();
+        HashMap<User, Double> duplicates = new HashMap<>();
 
         for (Transaction t : account.getBusinessTransactions()) {
             if (t.getCommerciant() == null) {
@@ -178,6 +180,7 @@ public class BusinessReport extends Operation {
                     double spent = employees.get(user);
                     spent += t.getAmountDouble();
                     employees.put(user, spent);
+                    duplicates.put(user, spent);
                 } else {
                     employees.put(user, t.getAmountDouble());
                 }
@@ -205,9 +208,16 @@ public class BusinessReport extends Operation {
                 String name = keyUser.getLastName() + " " + keyUser.getFirstName();
                 if (account.getEmployees().contains(keyUser)) {
                     employeesArray.add(name);
+                    if (duplicates.containsKey(keyUser) && Objects.equals(duplicates.get(keyUser), employees.get(keyUser))) {
+                        employeesArray.add(name);
+                    }
                 } else {
                     managersArray.add(name);
+                    if (duplicates.containsKey(keyUser) && Objects.equals(duplicates.get(keyUser), employees.get(keyUser))) {
+                        employeesArray.add(name);
+                    }
                 }
+
                 totalReceived += employees.get(keyUser);
             }
             commerciant.put("total received", totalReceived);

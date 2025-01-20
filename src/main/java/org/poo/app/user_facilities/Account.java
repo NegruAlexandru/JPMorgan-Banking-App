@@ -82,9 +82,9 @@ public class Account implements AccountInterface {
      */
     public void deleteAllCards() {
         for (Card c : new ArrayList<>(cards)) {
-            cards.remove(c);
             DB.removeAccountWithCardNumber(c.getCardNumber());
         }
+        cards.clear();
     }
 
     /**

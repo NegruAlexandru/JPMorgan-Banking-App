@@ -20,7 +20,7 @@ public abstract class PaymentHandler {
      */
     public static boolean pay(final Account ownerAccount,
                            final Card card, final CommandHandler commandHandler) {
-        User user = DB.findUserByEmail(commandHandler.getEmail());
+        User user = DB.findUserByEmail(ownerAccount.getEmail());
 
         double amount = commandHandler.getAmount();
         double amountAfterFees = PaymentHandler.getAmountAfterFees(user, ownerAccount, amount);
@@ -47,9 +47,7 @@ public abstract class PaymentHandler {
             return false;
         } else {
             AccountHandler.removeFunds(ownerAccount, amountAfterFees);
-//            System.out.println("cashback");
             double cashback = PaymentHandler.getCashbackAmount(user, ownerAccount, amount, DB.getCommerciantByName(commandHandler.getCommerciant()));
-//            System.out.println("cashback " + cashback);
             AccountHandler.addFunds(ownerAccount, cashback);
             if (ownerAccount.getIban().equals(ibannenorocit)) {
                 System.out.println("Payment successful");
@@ -58,18 +56,26 @@ public abstract class PaymentHandler {
             commandHandler.setDescription("Card payment");
             TransactionHandler.addTransactionPayOnline(commandHandler);
 
-            if (card.getType().equals("one-time")) {
-                new DeleteCard(commandHandler, null).execute();
-                new CreateOneTimeCard(commandHandler, null).execute();
-            }
-
             if (ownerAccount.getType().equals("business")) {
                 TransactionHandler.addBusinessPayOnlineTransaction(commandHandler,
                         DB.findUserByEmail(commandHandler.getEmail()));
             }
 
+            if (card.getType().equals("one-time")) {
+                ownerAccount.deleteCard(commandHandler.getCardNumber());
+                addTransaction("The card has been destroyed", ownerAccount, commandHandler);
+                new CreateOneTimeCard(commandHandler, null).execute();
+            }
+
             return true;
         }
+    }
+
+    public static void addTransaction(final String description, final Account account, final CommandHandler commandHandler) {
+        commandHandler.setEmail(account.getEmail());
+        commandHandler.setDescription(description);
+        commandHandler.setAccount(account.getIban());
+        TransactionHandler.addTransactionCard(commandHandler);
     }
 
     public static double getAmountAfterFees(final User user, final Account account, final double amount) {
@@ -77,6 +83,7 @@ public abstract class PaymentHandler {
             return amount * 1.002;
         } else if (user.getPlan().equals("silver")) {
             double amountInRON = DB.convert(amount, account.getCurrency(), "RON");
+            System.out.println("amount in RON " + amountInRON);
             if (amountInRON >= 500) {
                 return amount * 1.001;
             }
@@ -95,7 +102,7 @@ public abstract class PaymentHandler {
                     if (account.getIban().equals(ibannenorocit)) {
                         System.out.println("discount " + discount.getValue() + " " + discount.getCategory());
                     }
-    //                account.getCashbacks().remove(discount);
+
                     discount.setUsed(true);
                     break;
                 }
@@ -104,12 +111,14 @@ public abstract class PaymentHandler {
 
         if (account.getIban().equals(ibannenorocit)) {
             System.out.println("commerciant type " + commerciantType + " commerciant cashback strategy " + commerciant.getCashbackStrategy());
+            System.out.println("user plan " + user.getPlan());
         }
 
         if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
-//            account.getTotalSpentToCommerciant().putIfAbsent(commerciant, 0.0);
-//            double totalSpent = account.getTotalSpentToCommerciant().get(commerciant);
             double totalSpent = account.getTotalSpent();
+            if (account.getIban().equals(ibannenorocit)) {
+                System.out.println("total spent " + totalSpent);
+            }
             if (100 <= totalSpent && totalSpent < 300) {
                 cashback += switch (user.getPlan()) {
                     case "standard", "student" -> 0.001;
@@ -134,14 +143,32 @@ public abstract class PaymentHandler {
             }
         }
 
-//        System.out.println("Cashback: " + cashback);
-//        System.out.println("Fees: " + fees);
-//        System.out.println("Amount: " + amount);
-//        System.out.println("Amount after fees and cashback: " + amount * (1 - cashback + fees));
-
         if (account.getIban().equals(ibannenorocit)) {
             System.out.println("cashback " + cashback);
+            System.out.println("cashback amount " + amount * cashback);
         }
+
         return amount * cashback;
+    }
+
+    public static void giveDiscountIfEligible(final Account account, final int nrOfTransactions) {
+        switch (nrOfTransactions) {
+            case 2 -> makeCheckAndGiveDiscount(account, "Food", 0.02);
+            case 5 -> makeCheckAndGiveDiscount(account, "Clothes", 0.05);
+            case 10 -> makeCheckAndGiveDiscount(account, "Tech", 0.1);
+        }
+    }
+
+    private static void makeCheckAndGiveDiscount(final Account account, final String category, final double value) {
+        boolean found = false;
+        for (Discount d : account.getCashbacks()) {
+            if (d.getCategory().equals(category)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+            account.getCashbacks().add(new Discount(category, value));
     }
 }

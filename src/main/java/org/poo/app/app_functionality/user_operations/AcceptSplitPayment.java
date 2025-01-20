@@ -7,6 +7,8 @@ import org.poo.app.logic_handlers.DB;
 import org.poo.utils.Operation;
 import org.poo.utils.RequestSP;
 
+import java.util.ArrayList;
+
 public class AcceptSplitPayment extends Operation {
     public AcceptSplitPayment(CommandHandler handler, ArrayNode output) {
         super(handler, output);
@@ -20,24 +22,19 @@ public class AcceptSplitPayment extends Operation {
             return;
         }
 
-        // check check check
-        if (user.getSplitPaymentRequests().isEmpty()) {
-            return;
-        }
-
-        RequestSP request = user.getSplitPaymentRequests().getFirst();
-
-        while (request.isCancelled()) {
-            user.getSplitPaymentRequests().removeFirst();
-
-            if (user.getSplitPaymentRequests().isEmpty()) {
-                return;
+        ArrayList<RequestSP> requests = new ArrayList<>(user.getSplitPaymentRequests());
+        for (RequestSP req : requests) {
+            if (req.isCancelled()) {
+                user.getSplitPaymentRequests().remove(req);
+                continue;
             }
-            request = user.getSplitPaymentRequests().getFirst();
-        }
-        user.getSplitPaymentRequests().removeFirst();
 
-        request.setAccepted(true);
-        request.getSplitPayment().checkForSplitPayment(request);
+            if (req.getSplitPayment().getType().equals(handler.getSplitPaymentType())) {
+                user.getSplitPaymentRequests().remove(req);
+
+                req.setAccepted(true);
+                req.getSplitPayment().checkForSplitPayment(req);
+            }
+        }
     }
 }

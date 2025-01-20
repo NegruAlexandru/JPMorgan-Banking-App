@@ -177,10 +177,6 @@ public class SplitPayment extends Operation {
      */
     private Account searchForAccountWithoutFundsForSplit() {
         for (String account : handler.getAccounts()) {
-//            if (account.equals("RO76POOB4035116042454483")) {
-//                System.out.println("Account: " + account);
-//            }
-
             Account accountForSplit = DB.findAccountByIBAN(account);
             double amountToPay = getAmountForAccount(account, handler.getAmount());
 
@@ -253,29 +249,6 @@ public class SplitPayment extends Operation {
         return false;
     }
 
-//        /**
-//     * Create transaction if split payment is invalid
-//     * @return true if split payment is invalid
-//     */
-//    private boolean createTransactionIfSplitInvalid(Account accountWithoutFunds) {
-//        double fullAmount = handler.getAmount();
-//        if (accountWithoutFunds != null) {
-//            for (String acc : handler.getAccounts()) {
-//                double amountToPay = getAmountForAccount(acc, fullAmount);
-//                Account accForSplit = DB.findAccountByIBAN(acc);
-//                addTransaction("Split payment of "
-//                        + String.format("%.2f", fullAmount) + " " + handler.getCurrency(),
-//                        "Account " + accountWithoutFunds.getIban()
-//                                + " has insufficient funds for a split payment.",
-//                        accForSplit, amountToPay);
-//            }
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
-
     public void addTransaction(final String description, final String errorMessage,
                                final Account account, final double amount) {
         handler.setDescription(description);
@@ -303,5 +276,9 @@ public class SplitPayment extends Operation {
             return handler.getAmountForUsers().get(handler.getAccounts().indexOf(account));
         }
         return 0;
+    }
+
+    public String getType() {
+        return handler.getSplitPaymentType();
     }
 }

@@ -35,8 +35,9 @@ public class AddNewBusinessAssociate extends Operation {
 
         User user = DB.findUserByEmail(handler.getEmail());
 
-        if (businessAccount.getEmployees().contains(user) || businessAccount.getManagers().contains(user)) {
-            addTransactionToOutput("description", "The user is already an associate of the account.");
+        if (businessAccount.getEmployees().contains(user) || businessAccount.getManagers().contains(user) ||
+                businessAccount.getOwner().equals(user)) {
+//            addTransactionToOutput("description", "The user is already an associate of the account.");
             return;
         }
 

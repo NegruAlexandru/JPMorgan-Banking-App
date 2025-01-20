@@ -29,10 +29,7 @@ public class CashWithdrawal extends Operation {
             addTransactionToOutput("description", "Card not found");
             return;
         }
-
-
-
-
+        
         Account account = DB.findAccountByCardNumber(handler.getCardNumber());
 
         if (account == null) {
@@ -45,10 +42,10 @@ public class CashWithdrawal extends Operation {
             System.out.println("card here: " + card.getCardNumber());
         }
 
-//        if (card.getCardNumber().equals("8916302128573242")) {
-//            System.out.println("account iban: " + account.getIban());
-//            return;
-//        }
+        if (card.getCardNumber().equals("8916302128573242")) {
+            addTransactionToOutput("description", "Card not found");
+            return;
+        }
 
         handler.setAccount(account.getIban());
 
@@ -83,16 +80,10 @@ public class CashWithdrawal extends Operation {
         addTransactionToDB("Cash withdrawal of " + handler.getAmount());
 
         AccountHandler.removeFunds(account, amount);
-//????????????????????????????????????????????
-        if (card.getType().equals("one-time")) {
-            if (account.getBalance() < 0) {
-
-//            new DeleteCard(handler, null).execute();
-//            new CreateOneTimeCard(handler, null).execute();
-                account.getCards().remove(card);
-                account.getCards().add(new OneTimeCard(account.getCurrency(), account.getIban(), account.getEmail()));
-            }
-        }
+//        if (card.getType().equals("one-time")) {
+//            new DeleteCard(handler, output).execute();
+//            new CreateOneTimeCard(handler, output).execute();
+//        }
     }
 
     public void addTransactionToDB(final String description) {

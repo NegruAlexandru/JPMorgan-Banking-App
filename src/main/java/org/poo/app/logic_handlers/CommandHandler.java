@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.poo.app.input.Commerciant;
+import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.Card;
 import org.poo.fileio.CommandInput;
 import org.poo.utils.Command;
@@ -43,7 +45,7 @@ public class CommandHandler {
     private String role;
     private String type;
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    public static final String ibannenorocit = "RO33POOB4049920806186500";
+    public static String ibannenorocit = "RO01POOB9893132718323396";
     public String emailnenorocit = emailnenorocitget(ibannenorocit);
     public ArrayList<String> cardurinenorocite = cardurinenorociteget(ibannenorocit);
 
@@ -102,29 +104,39 @@ public class CommandHandler {
             if (this.getAccount() != null && this.getAccount().equals(ibannenorocit)) {
                 System.out.println();
                 System.out.println("Command: " + this.getCommand());
+                System.out.println("Account: " + this.getAccount());
                 System.out.println("timestamp: " + this.getTimestamp());
                 if (this.getAmount() != 0) {
                     System.out.println("Amount: " + this.getAmount());
                     System.out.println("Currency: " + this.getCurrency());
                     System.out.println("Card:" + this.getCardNumber());
                 }
+
+                if (this.receiver != null) {
+                    System.out.println("Receiver: " + this.getReceiver());
+                    Commerciant commerciant = DB.getCommerciantByIBAN(this.getReceiver());
+                    if (commerciant != null) {
+                        System.out.println("Commerciant: " + commerciant.getCommerciant());
+                    }
+                }
             } else if (this.getCardNumber() != null) {
                 System.out.println();
                 for (String card : cardurinenorocite) {
                     if (this.getCardNumber().equals(card)) {
                         System.out.println("Command: " + this.getCommand());
+                        System.out.println("Card: " + this.getCardNumber());
                         System.out.println("timestamp: " + this.getTimestamp());
                         if (this.getAmount() != 0) {
                             System.out.println("Amount: " + this.getAmount());
                             System.out.println("Currency: " + this.getCurrency());
                             System.out.println("Card:" + this.getCardNumber());
-
                         }
                     }
                 }
             } else if (this.getEmail() != null && this.getEmail().equals(emailnenorocit)) {
                 System.out.println();
                 System.out.println("Command: " + this.getCommand());
+                System.out.println("email: " + this.getEmail());
                 System.out.println("timestamp: " + this.getTimestamp());
                 if (this.getAmount() != 0) {
                     System.out.println("Amount: " + this.getAmount());

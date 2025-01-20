@@ -20,10 +20,6 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void addFunds(final Account account, final double amount) {
-//        account.setBalance(Math.round((account.getBalance() + amount) * 100.0) / 100.0);
-//        if (account.getType().equals("business")) {
-//            System.out.println(account.getBalance());
-//        }
         if (account.getIban().equals(ibannenorocit)) {
             System.out.println(account.getBalance());
             Account acc = DB.findAccountByIBAN(account.getIban());
@@ -35,10 +31,6 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
         if (account.getIban().equals(ibannenorocit)) {
             System.out.println(account.getBalance());
         }
-//        if (account.getType().equals("business")) {
-//            System.out.println(account.getBalance());
-//        }
-//        System.out.println();
     }
 
     /**
@@ -47,11 +39,6 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
      * @param amount amount to remove
      */
     public static void removeFunds(final Account account, final double amount) {
-//        account.setBalance(Math.round((account.getBalance() - amount) * 100.0) / 100.0);
-//        if (account.getType().equals("business")) {
-//            System.out.println(account.getBalance());
-//        }
-
         if (account.getIban().equals(ibannenorocit)) {
             System.out.println(account.getBalance());
             Account acc = DB.findAccountByIBAN(account.getIban());
@@ -62,10 +49,6 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
         if (account.getIban().equals(ibannenorocit)) {
             System.out.println(account.getBalance());
         }
-//        if (account.getType().equals("business")) {
-//            System.out.println(account.getBalance());
-//        }
-//        System.out.println();
     }
 
     /**
@@ -81,12 +64,7 @@ public class AccountHandler implements AccountVisitor, CardVisitor {
         User user = DB.findUserByEmail(sender.getEmail());
         double amountAndFees = PaymentHandler.getAmountAfterFees(user, sender, amount);
 
-//        System.out.println(sender.getBalance());
-//        User receiverUser = DB.findUserByEmail(receiver.getEmail());
-//        System.out.println(receiverUser.getPlan());
         removeFunds(sender, amountAndFees);
-//        System.out.println(sender.getBalance());
-//        System.out.println("...");
 
         amount = DB.convert(amount, sender.getCurrency(), receiver.getCurrency());
 

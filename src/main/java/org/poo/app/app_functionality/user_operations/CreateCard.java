@@ -25,10 +25,15 @@ public class CreateCard extends Operation {
             return;
         }
 
-        addTransaction("New card created", account.createCard(handler.getEmail()));
-        if (account.getIban().equals(ibannenorocit)) {
-            System.out.println("card number: " + handler.getCardNumber());
-        }
+        String cardNumber = account.createCard(handler.getEmail());
+        addTransaction("New card created", cardNumber);
+//        if (account.getIban().equals(ibannenorocit)) {
+//            System.out.println("created card number: " + cardNumber);
+//        }
+//        System.out.println("created card number: " + cardNumber);
+//        System.out.println("account iban: " + account.getIban());
+//        System.out.println("timestamp: " + handler.getTimestamp());
+
     }
 
     public void addTransaction(final String description, final String cardNumber) {

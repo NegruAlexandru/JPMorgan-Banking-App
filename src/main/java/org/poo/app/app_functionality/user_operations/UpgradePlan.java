@@ -27,8 +27,6 @@ public class UpgradePlan extends Operation {
             return;
         }
 
-        handler.setAccount(account.getIban());
-
         User user = DB.findUserByEmail(account.getEmail());
 
         if (user == null) {

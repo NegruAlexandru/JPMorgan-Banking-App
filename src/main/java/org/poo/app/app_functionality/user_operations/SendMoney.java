@@ -2,11 +2,14 @@ package org.poo.app.app_functionality.user_operations;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.app.input.Commerciant;
+import org.poo.app.input.User;
 import org.poo.app.logic_handlers.*;
 import org.poo.app.user_facilities.Account;
 import org.poo.app.user_facilities.BusinessAccount;
-import org.poo.app.user_facilities.Discount;
 import org.poo.utils.Operation;
+
+import static org.poo.app.logic_handlers.CommandHandler.ibannenorocit;
+import static org.poo.app.logic_handlers.PaymentHandler.giveDiscountIfEligible;
 
 public class SendMoney extends Operation {
     public SendMoney(final CommandHandler handler, final ArrayNode output) {
@@ -28,132 +31,30 @@ public class SendMoney extends Operation {
             addTransactionToOutput("description", "User not found");
         }
 
-        Account receiverAccount;
-        if (handler.getAlias() != null) {
-            receiverAccount = DB.findAccountByIBAN(DB.findUserByEmail(senderAccount.getEmail()).getAliases().get(handler.getAlias()));
-        } else {
-            receiverAccount = DB.findAccountByIBAN(handler.getReceiver());
-
-            if (receiverAccount == null) {
-                receiverAccount = DB.findAccountByIBAN(DB.findUserByEmail(senderAccount.getEmail()).getAliases().get(handler.getAccount()));
-            }
-//            if (receiverAccount == null && senderAccount.getType().equals("business")) {
-//                // receiver account maybe is a commerciant
-//
-//                if (DB.getCommerciantByIBAN(handler.getReceiver()) != null) {
-//                    // TODO: implement commerciant payment
-//
-//                    // use / add discount
-//                }
-//                return;
-//
-        }
-
-        if (receiverAccount == null) {
-            Commerciant commerciant = DB.getCommerciantByIBAN(handler.getReceiver());
-            if (commerciant != null) {
-                double amountSent = handler.getAmount();
-                double amountSentAfterFees = PaymentHandler.getAmountAfterFees(DB.findUserByEmail(senderAccount.getEmail()), senderAccount, amountSent);
-
-                if (senderAccount.getBalance() - amountSentAfterFees < 0) {
-                    handler.setDescription("Insufficient funds");
-                    handler.setAccount(senderAccount.getIban());
-                    TransactionHandler.addTransactionDescriptionTimestamp(handler);
-                    return;
-                }
-
-                if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
-                    // Update the total amount spent by the account
-//                    if (senderAccount.getTotalSpentToCommerciant().containsKey(commerciant)) {
-//                        double totalSpent = senderAccount.getTotalSpentToCommerciant().get(commerciant);
-//                        totalSpent += amountSent;
-//                        senderAccount.getTotalSpentToCommerciant().put(commerciant, totalSpent);
-//                    } else
-//                        senderAccount.getTotalSpentToCommerciant().put(commerciant, amountSent);
-                    double totalSpent = senderAccount.getTotalSpent();
-                    totalSpent += amountSent;
-                    senderAccount.setTotalSpent(totalSpent);
-                } else if (commerciant.getCashbackStrategy().equals("nrOfTransactions")) {
-
-                    // Update the number of transactions for the account
-                    if (senderAccount.getNrOfTransactionsToCommerciant().containsKey(commerciant)) {
-                        int nrOfTransactions = senderAccount.getNrOfTransactionsToCommerciant().get(commerciant);
-                        nrOfTransactions++;
-                        senderAccount.getNrOfTransactionsToCommerciant().put(commerciant, nrOfTransactions);
-                    } else {
-                        senderAccount.getNrOfTransactionsToCommerciant().put(commerciant, 1);
-                    }
-
-                    int nrOfTransactions = senderAccount.getNrOfTransactionsToCommerciant().get(commerciant);
-//                    int nrOfTransactions = senderAccount.getNrOfTransactions();
-//                    nrOfTransactions++;
-//                    senderAccount.setNrOfTransactions(nrOfTransactions);
-
-                    // Add discount if the account has reached a certain number of transactions
-                    if (nrOfTransactions == 2) {
-                        boolean found = false;
-                        for (Discount d : senderAccount.getCashbacks()) {
-                            if (d.getCategory().equals("Food")) {
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (!found)
-                            senderAccount.getCashbacks().add(new Discount("Food", 0.02));
-                    }
-                    else if (nrOfTransactions == 5) {
-                        boolean found = false;
-                        for (Discount d : senderAccount.getCashbacks()) {
-                            if (d.getCategory().equals("Clothes")) {
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (!found)
-                            senderAccount.getCashbacks().add(new Discount("Clothes", 0.05));
-                    }
-                    else if (nrOfTransactions == 10) {
-                        boolean found = false;
-                        for (Discount d : senderAccount.getCashbacks()) {
-                            if (d.getCategory().equals("Tech")) {
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (!found)
-                            senderAccount.getCashbacks().add(new Discount("Tech", 0.1));
-                    }
-                }
-
-                if (senderAccount.getType().equals("business")) {
-                    BusinessAccount senderBusinessAccount = (BusinessAccount) senderAccount;
-                    if (!senderBusinessAccount.getOwner().equals(DB.findUserByEmail(handler.getEmail()))) {
-                        if (handler.getAmount() < senderBusinessAccount.getSpendingLimit()) {
-                            System.out.println("Amount is less than the spending limit");
-                            return;
-                        }
-                    }
-                }
-
-                double cashback = PaymentHandler.getCashbackAmount(DB.findUserByEmail(senderAccount.getEmail()), senderAccount, amountSent, commerciant);
-
-                AccountHandler.removeFunds(senderAccount, amountSentAfterFees);
-                AccountHandler.addFunds(senderAccount, cashback);
-
-                handler.setAmount(amountSent);
-                TransactionHandler.addTransactionSendMoney(handler);
-
-                if (senderAccount.getType().equals("business")) {
-                    TransactionHandler.addBusinessPayOnlineTransaction(handler,
-                            DB.findUserByEmail(handler.getEmail()));
-                }
-            }
+        if (handler.getAmount() <= 0) {
             return;
         }
 
+        User user1 = DB.findUserByEmail(handler.getEmail());
+
+        if (senderAccount.getType().equals("business")) {
+            BusinessAccount businessAccount = (BusinessAccount) senderAccount;
+            if (!businessAccount.getEmployees().contains(user1)
+                && !businessAccount.getManagers().contains(user1)
+                && !businessAccount.getOwner().equals(user1)) {
+                return;
+            }
+        } else {
+            if (!senderAccount.getEmail().equals(handler.getEmail())) {
+                return;
+            }
+        }
+
+        Account receiverAccount = DB.findAccountByIBAN(handler.getReceiver());
+
+        if (receiverAccount == null) {
+            receiverAccount = DB.findAccountByIBAN(DB.findUserByEmail(senderAccount.getEmail()).getAliases().get(handler.getAccount()));
+        }
 
         double amountSent = handler.getAmount();
         double amountSentAfterFees = PaymentHandler.getAmountAfterFees(DB.findUserByEmail(senderAccount.getEmail()), senderAccount, amountSent);
@@ -165,17 +66,103 @@ public class SendMoney extends Operation {
             return;
         }
 
-        double amountReceived = AccountHandler.transferFunds(senderAccount,
-                receiverAccount, amountSent);
+        if (receiverAccount == null) {
+            Commerciant commerciant = DB.getCommerciantByIBAN(handler.getReceiver());
 
-        handler.setAmount(amountSent);
-        TransactionHandler.addTransactionSendMoney(handler);
-        handler.setAmount(amountReceived);
-        TransactionHandler.addTransactionReceiveMoney(handler);
+            if (commerciant == null) {
+                return;
+            }
 
-        if (senderAccount.getType().equals("business")) {
-            TransactionHandler.addBusinessPayOnlineTransaction(handler,
-                    DB.findUserByEmail(handler.getEmail()));
+            if (commerciant.getCashbackStrategy().equals("spendingThreshold")) {
+                double amount = DB.convert(amountSent, senderAccount.getCurrency(), "RON");
+
+                double totalSpent = senderAccount.getTotalSpent();
+                totalSpent += amount;
+                if (handler.getAccount().equals(ibannenorocit)) {
+                    System.out.println("total spent: " + totalSpent);
+                }
+                senderAccount.setTotalSpent(totalSpent);
+            }
+
+            double cashback = PaymentHandler.getCashbackAmount(DB.findUserByEmail(senderAccount.getEmail()), senderAccount, amountSent, commerciant);
+
+            if (commerciant.getCashbackStrategy().equals("nrOfTransactions")) {
+                if (senderAccount.getNrOfTransactionsToCommerciant().containsKey(commerciant)) {
+                    int nrOfTransactions = senderAccount.getNrOfTransactionsToCommerciant().get(commerciant);
+                    nrOfTransactions++;
+                    senderAccount.getNrOfTransactionsToCommerciant().put(commerciant, nrOfTransactions);
+                    if (handler.getAccount().equals(ibannenorocit)) {
+                        System.out.println("Nr of transactions: " + nrOfTransactions);
+                    }
+                    giveDiscountIfEligible(senderAccount, nrOfTransactions);
+                } else {
+                    senderAccount.getNrOfTransactionsToCommerciant().put(commerciant, 1);
+                    if (handler.getAccount().equals(ibannenorocit)) {
+                        System.out.println("Nr of transactions: " + 1);
+                    }
+                }
+            }
+
+            AccountHandler.removeFunds(senderAccount, amountSentAfterFees);
+            AccountHandler.addFunds(senderAccount, cashback);
+
+            TransactionHandler.addTransactionSendMoney(handler);
+
+            if (senderAccount.getType().equals("business"))
+                TransactionHandler.addBusinessPayOnlineTransaction(handler,
+                        DB.findUserByEmail(handler.getEmail()));
+
+            if (user1.getPlan().equals("silver")) {
+                double amount = DB.convert(amountSent, senderAccount.getCurrency(), "RON");
+                if (amount >= 300) {
+
+                    user1.setNrOfTransactionsOver300RON(user1.getNrOfTransactionsOver300RON() + 1);
+                    if (senderAccount.getIban().equals(ibannenorocit)) {
+                        System.out.println("Transaction over 300 RON");
+                        System.out.println(user1.getNrOfTransactionsOver300RON());
+                    }
+
+                    if (user1.getNrOfTransactionsOver300RON() == 5) {
+                        user1.setPlan("gold");
+                        handler.setNewPlanType(user1.getPlan());
+                        handler.setAccount(senderAccount.getIban());
+                        handler.setDescription("Upgrade plan");
+                        TransactionHandler.addUpgradePlanTransactionToDB(handler);
+                    }
+                }
+            }
+        } else {
+            double amountReceived = AccountHandler.transferFunds(senderAccount,
+                    receiverAccount, amountSent);
+
+            handler.setAmount(amountSent);
+            TransactionHandler.addTransactionSendMoney(handler);
+            handler.setAmount(amountReceived);
+            TransactionHandler.addTransactionReceiveMoney(handler);
+
+            if (senderAccount.getType().equals("business"))
+                TransactionHandler.addBusinessPayOnlineTransaction(handler,
+                        DB.findUserByEmail(handler.getEmail()));
+
+            if (user1.getPlan().equals("silver")) {
+                double amount = DB.convert(amountSent, senderAccount.getCurrency(), "RON");
+                if (amount >= 300) {
+
+                    user1.setNrOfTransactionsOver300RON(user1.getNrOfTransactionsOver300RON() + 1);
+                    if (senderAccount.getIban().equals(ibannenorocit)) {
+                        System.out.println("Transaction over 300 RON");
+                        System.out.println(user1.getNrOfTransactionsOver300RON());
+                    }
+
+                    if (user1.getNrOfTransactionsOver300RON() == 5) {
+                        user1.setPlan("gold");
+                        handler.setNewPlanType(user1.getPlan());
+                        handler.setAccount(senderAccount.getIban());
+                        handler.setDescription("Upgrade plan");
+                        TransactionHandler.addUpgradePlanTransactionToDB(handler);
+                    }
+                }
+            }
         }
     }
 }
