@@ -1,4 +1,4 @@
-# Proiect Etapa 2 - J. POO Morgan Chase & Co.
+J. POO Morgan Chase & Co. Banking App
 **Autor**: *Negru Alexandru*
 
 ---
