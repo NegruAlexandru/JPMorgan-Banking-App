@@ -190,8 +190,4 @@ Logica aplicatiei bancare se afla in pachetul `org.poo` construit astfel:
 5. **Visitor**: Am folosit design pattern-ul `Visitor` pentru a vizita tranzactiile si utilizatorii in momentul in care se efectueaza `Print Transactions` si `Print Users`.
 - AccountHandler din pachetul `payment`, care mosteneste interfetele `AccountVisitor` si `CardVisitor`.
 - Toate clasele din pachetul `userFacilities`, care implementeaza metoda de acceptare a unui `AccountVisitor` sau `CardVisitor`.
-
-## Feedback
-Consider ca proiectul a avut o tematica interesanta si un nivel bun de relevanta in domeniul de software engineering. Totusi am intampinat probleme din cauza numarul mare de schimbari aparute in structura proiectului si pe checker.
-
 ---
